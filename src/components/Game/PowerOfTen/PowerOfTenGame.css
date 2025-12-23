@@ -1,0 +1,158 @@
+.game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-text-main);
+    cursor: pointer;
+}
+
+.hud {
+    display: flex;
+    gap: var(--spacing-lg);
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+}
+
+.game-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.question-card {
+    background: var(--color-surface);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+    border: 2px solid transparent;
+}
+
+.question-card.correct {
+    border-color: var(--color-success);
+    transform: scale(1.05);
+}
+
+.question-card.incorrect {
+    border-color: var(--color-error);
+    animation: shake 0.5s;
+}
+
+.operation-display {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.equals {
+    font-size: var(--font-size-2xl);
+    color: var(--color-text-muted);
+    margin-bottom: var(--spacing-md);
+}
+
+.answer-display {
+    font-size: var(--font-size-3xl);
+    min-height: 3rem;
+    color: var(--color-primary);
+    font-weight: 700;
+    border-bottom: 2px solid var(--color-text-muted);
+    display: inline-block;
+    min-width: 100px;
+}
+
+.feedback-msg {
+    margin-top: var(--spacing-md);
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+}
+
+.feedback-msg.success {
+    color: var(--color-success);
+}
+
+.feedback-msg.error {
+    color: var(--color-error);
+}
+
+.numpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.num-btn {
+    padding: var(--spacing-lg);
+    font-size: var(--font-size-xl);
+    border: none;
+    background-color: white;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.num-btn:active {
+    background-color: var(--color-background);
+    transform: translateY(1px);
+}
+
+.del-btn {
+    background-color: #fee2e2;
+    color: var(--color-error);
+}
+
+.enter-btn {
+    grid-column: span 3;
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.enter-btn:active {
+    background-color: var(--color-primary-hover);
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}

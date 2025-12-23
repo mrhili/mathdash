@@ -1,0 +1,103 @@
+.stack-align-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.grid-board {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    background: var(--color-surface);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-xl);
+    position: relative;
+    overflow: hidden;
+    /* Hide cells that shift out too far */
+    width: 100%;
+    max-width: 600px;
+}
+
+.grid-row {
+    display: flex;
+    justify-content: center;
+    /* Center the grid rows */
+}
+
+/* Define cell size variable locally */
+.grid-board {
+    --cell-size: 40px;
+}
+
+.grid-cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: monospace;
+    color: transparent;
+    /* Hide text in empty cells */
+}
+
+.grid-cell.top-cell,
+.grid-cell.bottom-cell {
+    color: var(--color-text-main);
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.grid-cell.top-cell {
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.grid-cell.bottom-cell {
+    background-color: #e0e7ff;
+    /* Light indigo highlight for movable part */
+    border-radius: var(--radius-sm);
+}
+
+.guide-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--color-accent);
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 10;
+    /* Position is set inline via JS */
+}
+
+.controls {
+    display: flex;
+    gap: var(--spacing-md);
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.shift-btn {
+    min-width: 120px;
+}
+
+.check-btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: var(--font-size-lg);
+}
+
+@media (max-width: 600px) {
+    .grid-board {
+        --cell-size: 30px;
+        padding: var(--spacing-md);
+    }
+
+    .grid-cell {
+        font-size: 1.2rem;
+    }
+}

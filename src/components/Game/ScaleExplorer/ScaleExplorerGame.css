@@ -1,0 +1,102 @@
+.scale-game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.scale-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.number-line {
+    position: relative;
+    width: 90%;
+    height: 4px;
+    background: #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tick-mark {
+    position: relative;
+    width: 2px;
+    height: 20px;
+    background: #334155;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tick-mark:hover {
+    background: #3b82f6;
+    height: 30px;
+}
+
+.tick-label {
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.9rem;
+    color: #475569;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.tick-segment {
+    position: absolute;
+    top: -30px;
+    bottom: -30px;
+    left: 0;
+    width: 100%;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.tick-segment:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.zoom-info {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #3b82f6;
+    margin-bottom: 10px;
+}
+
+.target-display {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.scientific-label {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-weight: bold;
+}

@@ -1,0 +1,183 @@
+.rule-of-three-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.rot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    background: #f1f5f9;
+    padding: 20px;
+    border-radius: 1rem;
+    position: relative;
+    margin: 20px 0;
+}
+
+.rot-cell {
+    width: 100px;
+    height: 100px;
+    background: white;
+    border: 3px solid #cbd5e1;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #334155;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.rot-cell:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.rot-cell.selected {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    color: #1d4ed8;
+    transform: scale(1.05);
+}
+
+.rot-cell.loner-selected {
+    border-color: #f59e0b;
+    background: #fffbeb;
+    color: #b45309;
+}
+
+.rot-cell.target {
+    border-style: dashed;
+    background: #f8fafc;
+    color: #94a3b8;
+}
+
+.rot-cell.correct {
+    border-color: #10b981;
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.rot-cell.error {
+    border-color: #ef4444;
+    background: #fee2e2;
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+.instruction-panel {
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.instruction-text {
+    font-size: 1.2rem;
+    color: #475569;
+    margin-bottom: 10px;
+}
+
+.step-indicator {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.step-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #cbd5e1;
+}
+
+.step-dot.active {
+    background: #3b82f6;
+    transform: scale(1.2);
+}
+
+.step-dot.completed {
+    background: #10b981;
+}
+
+.formula-display {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1e293b;
+    background: #f1f5f9;
+    padding: 10px 20px;
+    border-radius: 0.5rem;
+    margin-top: 10px;
+    animation: fadeIn 0.5s;
+}
+
+.solve-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #3b82f6;
+}
+
+.solve-input:focus {
+    outline: none;
+}
+
+.diagonal-line {
+    position: absolute;
+    height: 4px;
+    background: #3b82f6;
+    opacity: 0.5;
+    pointer-events: none;
+    transform-origin: center;
+    z-index: 5;
+    border-radius: 2px;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

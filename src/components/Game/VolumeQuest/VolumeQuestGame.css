@@ -1,0 +1,67 @@
+.volume-quest-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.volume-quest-area .coordinate-grid {
+    margin-bottom: 1rem;
+}
+
+.extrusion-container {
+    position: relative;
+    /* Perspective for 3D effect if needed, though we are doing 2.5D SVG */
+}
+
+.shape-face {
+    transition: all 1s ease-in-out;
+}
+
+.extrusion-lines {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLines 1s forwards;
+}
+
+@keyframes drawLines {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.volume-input-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.phase-indicator {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.phase-step {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: #e5e7eb;
+    color: #6b7280;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.phase-step.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.phase-step.completed {
+    background: #10b981;
+    /* Green */
+    color: white;
+}

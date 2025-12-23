@@ -1,0 +1,162 @@
+/* Fraction Game Styles */
+
+.fraction-game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Target Display */
+.target-fraction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 3rem;
+    font-weight: bold;
+    color: #374151;
+    background: white;
+    padding: 15px 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    font-family: 'KaTeX_Main', serif;
+}
+
+.fraction-line {
+    width: 100%;
+    height: 4px;
+    background: #374151;
+    margin: 5px 0;
+    border-radius: 2px;
+}
+
+/* Pizza/Circle Container */
+.pizza-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 20px 0;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pizza-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    /* Start from top */
+    overflow: visible;
+}
+
+.slice {
+    fill: #f3f4f6;
+    stroke: #9ca3af;
+    stroke-width: 2;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.slice:hover {
+    fill: #e5e7eb;
+    transform: scale(1.05);
+    /* Pop out effect */
+    transform-origin: center;
+}
+
+.slice.filled {
+    fill: #f59e0b;
+    /* Pizza Cheese Color */
+    stroke: #d97706;
+}
+
+.slice.filled:hover {
+    fill: #fbbf24;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.control-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: #3b82f6;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn:hover {
+    background: #2563eb;
+    transform: scale(1.1);
+}
+
+.control-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.cut-count {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1f2937;
+    min-width: 50px;
+    text-align: center;
+}
+
+/* Instructions */
+.instruction-text {
+    font-size: 1.2rem;
+    color: #4b5563;
+    text-align: center;
+    min-height: 1.5em;
+}
+
+/* Animations */
+@keyframes popIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    80% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.slice-pop {
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}

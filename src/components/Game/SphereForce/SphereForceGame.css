@@ -1,0 +1,270 @@
+/* Sphere Force Game Styles */
+
+.volume-game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* HUD */
+.hud {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #374151;
+    background: #f3f4f6;
+    padding: 12px 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Instruction Text */
+.instruction-text {
+    font-size: 1.3rem;
+    color: #1f2937;
+    text-align: center;
+    background: #e0f2fe;
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: 2px solid #bae6fd;
+    font-weight: 500;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Game SVG Area */
+.game-svg {
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+    margin: 20px 0;
+    transition: all 0.3s ease;
+}
+
+/* Formula Card */
+.formula-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 15px 25px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    min-width: 200px;
+    animation: slideUp 0.4s ease-out;
+}
+
+.formula-card.highlight {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    transform: scale(1.05);
+}
+
+.formula-text {
+    font-family: 'KaTeX_Main', 'Times New Roman', serif;
+    font-size: 1.4rem;
+    color: #374151;
+}
+
+.formula-values {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+/* Input Group */
+.input-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.area-input {
+    padding: 10px 15px;
+    font-size: 1.5rem;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    width: 120px;
+    text-align: center;
+    font-weight: bold;
+    color: #111827;
+    transition: border-color 0.2s;
+}
+
+.area-input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Buttons */
+.btn-primary {
+    padding: 10px 24px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: transform 0.1s, background-color 0.2s;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #4b5563;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Intro Styles */
+.intro-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 40px;
+}
+
+/* Sphere Force Specifics */
+.sphere-intro-group {
+    position: relative;
+    width: 300px;
+    height: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Cube/Sphere Visuals */
+.intro-cube-group {
+    position: absolute;
+    transition: all 1s ease;
+}
+
+/* Align blocks nicely */
+.cube-pack-0 {
+    transform: translate(-34px, -34px);
+}
+
+.cube-pack-1 {
+    transform: translate(34px, -34px);
+}
+
+.cube-pack-2 {
+    transform: translate(-34px, 34px);
+}
+
+.cube-pack-3 {
+    transform: translate(34px, 34px);
+}
+
+.intro-sphere {
+    position: absolute;
+    transform: scale(1);
+    transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Water Animations */
+.water-fill {
+    fill: #3b82f6;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.filling .water-fill {
+    opacity: 0.8;
+}
+
+/* Pouring Animation: Move blocks up and rotate to pour */
+.pouring .intro-cube-group {
+    transform: translateY(-120px) rotate(45deg) scale(0.8);
+    opacity: 0;
+    /* Fade out as they pour */
+    transition: all 1.5s ease-in-out;
+}
+
+.pouring .intro-sphere {
+    opacity: 1;
+}
+
+.sphere-water {
+    fill: #3b82f6;
+    clip-path: circle(0% at 50% 100%);
+    transition: clip-path 2s ease-out;
+}
+
+.pouring .sphere-water {
+    clip-path: circle(100% at 50% 50%);
+}
+
+/* Single Block Highlight */
+.single-block-highlight .cube-pack-1,
+.single-block-highlight .cube-pack-2,
+.single-block-highlight .cube-pack-3 {
+    opacity: 0.1;
+}
+
+.single-block-highlight .cube-pack-0 {
+    transform: scale(1.5);
+    z-index: 10;
+}
+
+/* Result Cards */
+.result-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.5s ease-out;
+}
+
+.result-card.success h2 {
+    color: #10b981;
+}
+
+.result-card.error h2 {
+    color: #ef4444;
+}

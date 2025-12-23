@@ -1,0 +1,171 @@
+/* Simplify Express Game Styles */
+
+.express-game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Fraction Display */
+.express-fraction-container {
+    background: white;
+    padding: 40px 80px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 2px solid #e5e7eb;
+}
+
+.express-fraction {
+    font-family: 'KaTeX_Main', serif;
+    font-size: 5rem;
+    font-weight: bold;
+    color: #1f2937;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+}
+
+.express-line {
+    width: 100%;
+    height: 8px;
+    background: #1f2937;
+    margin: 15px 0;
+    border-radius: 4px;
+}
+
+/* Input Area */
+.input-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.divisor-input-display {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #3b82f6;
+    background: #eff6ff;
+    padding: 15px 40px;
+    border-radius: 12px;
+    border: 2px solid #3b82f6;
+    min-width: 150px;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.numpad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+}
+
+.num-btn {
+    padding: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: all 0.1s;
+    color: #374151;
+}
+
+.num-btn:hover {
+    background: #f9fafb;
+    transform: translateY(-2px);
+}
+
+.num-btn:active {
+    transform: translateY(0);
+}
+
+.action-btn {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.submit-btn {
+    background: #3b82f6;
+    color: white;
+}
+
+.submit-btn:hover {
+    background: #2563eb;
+}
+
+/* Stats / Steps */
+.step-tracker {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.step-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #d1d5db;
+}
+
+.step-dot.active {
+    background: #3b82f6;
+}
+
+/* Feedback Overlay */
+.express-feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 100;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 4px solid #3b82f6;
+}
+
+.feedback-score {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #f59e0b;
+    margin: 10px 0;
+}
+
+.feedback-msg {
+    font-size: 1.5rem;
+    color: #4b5563;
+}
+
+@keyframes popIn {
+    from {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}

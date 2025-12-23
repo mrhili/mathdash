@@ -1,0 +1,55 @@
+.instruction-text {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-xl);
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+.number-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 4rem;
+    font-weight: 700;
+    font-family: monospace;
+    /* Helps with alignment */
+    background: var(--color-surface);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    user-select: none;
+}
+
+.digit {
+    cursor: pointer;
+    padding: 0 var(--spacing-xs);
+    transition: color 0.2s, transform 0.2s;
+    border-radius: var(--radius-sm);
+}
+
+.digit:hover {
+    color: var(--color-primary);
+    background-color: #e0e7ff;
+    /* Light indigo */
+    transform: scale(1.1);
+}
+
+.decimal-point {
+    cursor: default;
+    color: var(--color-text-muted);
+}
+
+.decimal-point:hover {
+    color: var(--color-text-muted);
+    background-color: transparent;
+    transform: none;
+}
+
+/* Mobile responsiveness for very long numbers */
+@media (max-width: 600px) {
+    .number-display {
+        font-size: 2.5rem;
+        flex-wrap: wrap;
+    }
+}

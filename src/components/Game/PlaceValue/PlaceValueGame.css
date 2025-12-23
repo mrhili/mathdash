@@ -1,0 +1,149 @@
+/* Place Value Game Styles */
+
+.place-value-game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Number Display */
+.number-display {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #374151;
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.digit-box {
+    position: relative;
+    padding: 10px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 3px solid transparent;
+}
+
+.digit-box:hover {
+    background: #f3f4f6;
+    transform: translateY(-2px);
+}
+
+.digit-box.selected {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+}
+
+.digit-box.completed {
+    background: #ecfdf5;
+    border-color: #10b981;
+    color: #059669;
+}
+
+.decimal-point {
+    color: #9ca3af;
+    margin: 0 5px;
+}
+
+/* Power Selector Popup */
+.power-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.3s ease-out;
+}
+
+.power-btn {
+    padding: 15px;
+    font-size: 1.2rem;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'KaTeX_Main', serif;
+}
+
+.power-btn:hover {
+    background: #e0f2fe;
+    border-color: #3b82f6;
+    transform: scale(1.05);
+}
+
+/* Formula Display */
+.formula-display {
+    font-family: 'KaTeX_Main', serif;
+    font-size: 1.5rem;
+    color: #4b5563;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.formula-part {
+    padding: 5px 10px;
+    background: #f3f4f6;
+    border-radius: 8px;
+    animation: fadeIn 0.3s;
+}
+
+.formula-part.new {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+/* Animations */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* HUD */
+.hud {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #374151;
+    background: #f3f4f6;
+    padding: 12px 24px;
+    border-radius: 12px;
+}

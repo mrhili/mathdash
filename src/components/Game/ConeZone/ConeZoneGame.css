@@ -1,0 +1,213 @@
+/* Cone Zone Game Styles */
+
+.volume-game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hud {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #374151;
+    background: #f3f4f6;
+    padding: 12px 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.instruction-text {
+    font-size: 1.3rem;
+    color: #1f2937;
+    text-align: center;
+    background: #e0f2fe;
+    padding: 15px 30px;
+    border-radius: 12px;
+    border: 2px solid #bae6fd;
+    font-weight: 500;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.game-svg {
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+    margin: 20px 0;
+    transition: all 0.3s ease;
+}
+
+.formula-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 15px 25px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    min-width: 200px;
+    animation: slideUp 0.4s ease-out;
+}
+
+.formula-card.highlight {
+    border-color: #3b82f6;
+    background: #eff6ff;
+    transform: scale(1.05);
+}
+
+.formula-text {
+    font-family: 'KaTeX_Main', 'Times New Roman', serif;
+    font-size: 1.4rem;
+    color: #374151;
+}
+
+.formula-values {
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+.input-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.area-input {
+    padding: 10px 15px;
+    font-size: 1.5rem;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    width: 120px;
+    text-align: center;
+    font-weight: bold;
+    color: #111827;
+    transition: border-color 0.2s;
+}
+
+.area-input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.btn-primary {
+    padding: 10px 24px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: transform 0.1s, background-color 0.2s;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #4b5563;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.intro-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 40px;
+}
+
+.intro-visuals {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.arrow-divider {
+    font-size: 3rem;
+    color: #9ca3af;
+    margin: 0 20px;
+}
+
+/* Cone Zone Specific Animations */
+.water-fill-cylinder {
+    fill: #3b82f6;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.filling .water-fill-cylinder {
+    opacity: 0.6;
+}
+
+.cone-water {
+    fill: #3b82f6;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    /* Triangle clip */
+    transform-origin: bottom;
+    transform: scaleY(0);
+    transition: transform 1s ease-out;
+}
+
+.pouring .cone-water {
+    transform: scaleY(1);
+}
+
+.result-card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: slideUp 0.5s ease-out;
+}
+
+.result-card.success h2 {
+    color: #10b981;
+}
+
+.result-card.error h2 {
+    color: #ef4444;
+}

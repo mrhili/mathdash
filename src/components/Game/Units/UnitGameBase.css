@@ -1,0 +1,150 @@
+.unit-game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Outfit', sans-serif;
+}
+
+.intro-slide {
+    text-align: center;
+    max-width: 600px;
+    animation: fadeIn 0.5s ease;
+}
+
+.intro-visual {
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.unit-ladder {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.ladder-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    min-width: 60px;
+    position: relative;
+    border: 2px solid transparent;
+}
+
+.ladder-step.active {
+    background: #dbeafe;
+    border-color: #3b82f6;
+    transform: scale(1.1);
+    z-index: 2;
+}
+
+.ladder-step .unit-name {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 4px;
+}
+
+.ladder-step .unit-symbol {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.conversion-arrow {
+    display: flex;
+    align-items: center;
+    color: #94a3b8;
+    font-size: 0.8rem;
+}
+
+.game-question {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #1e293b;
+    margin-bottom: 30px;
+    text-align: center;
+    background: white;
+    padding: 20px 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.unit-input {
+    font-size: 1.5rem;
+    padding: 12px 20px;
+    border: 2px solid #cbd5e1;
+    border-radius: 12px;
+    width: 150px;
+    text-align: center;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.unit-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.unit-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #64748b;
+}
+
+/* Area/Volume Grids */
+.grid-table {
+    display: grid;
+    gap: 2px;
+    background: #cbd5e1;
+    padding: 2px;
+    border-radius: 8px;
+    margin: 20px auto;
+}
+
+.grid-header {
+    background: #f8fafc;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.grid-cell {
+    background: white;
+    padding: 10px;
+    text-align: center;
+    min-height: 40px;
+}
+
+@media (max-width: 600px) {
+    .unit-ladder {
+        gap: 5px;
+    }
+
+    .ladder-step {
+        min-width: 40px;
+        padding: 5px;
+    }
+
+    .ladder-step .unit-name {
+        display: none;
+    }
+}

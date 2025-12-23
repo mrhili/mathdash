@@ -1,0 +1,17 @@
+prompt to build the next game with proper design system
+
+
+add the next game
+
+the design should respect the ui ux theory
+the design most be mobile first
+most clear a math concept in the mind of students
+most be educational and fun
+dont forget to add the scoring system
+dont forget about translation system remember every game has separate translation system
+dont forget to clarify the concept in the concept file and add it to list
+dont forget to include it in the dashboard using the configs
+
+
+
+execute directly after writing the mplementation plan

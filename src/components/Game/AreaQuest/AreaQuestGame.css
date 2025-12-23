@@ -1,0 +1,105 @@
+.area-quest-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.coordinate-grid {
+    position: relative;
+    margin: var(--spacing-xl) 0;
+    padding-left: 50px;
+    padding-bottom: 30px;
+}
+
+.grid-wrapper-svg {
+    border-left: 2px solid var(--color-text-main);
+    border-bottom: 2px solid var(--color-text-main);
+    background-color: var(--color-surface);
+    line-height: 0;
+    /* Remove extra space below SVG */
+}
+
+.game-svg {
+    display: block;
+}
+
+.y-axis-label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 30px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+}
+
+.x-axis-label {
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.rules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+    width: 100%;
+    max-width: 600px;
+}
+
+.rule-btn {
+    font-size: var(--font-size-md);
+    padding: var(--spacing-lg);
+}
+
+.calc-input-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.formula-display {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+}
+
+.input-with-unit {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.area-input {
+    font-size: 2rem;
+    padding: var(--spacing-sm);
+    width: 150px;
+    text-align: center;
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-md);
+}
+
+.unit-label {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    color: var(--color-text-muted);
+}
+
+@media (max-width: 600px) {
+    .rules-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Scale down SVG on mobile if needed, or rely on viewbox */
+    .grid-wrapper-svg svg {
+        max-width: 100%;
+        height: auto;
+    }
+}

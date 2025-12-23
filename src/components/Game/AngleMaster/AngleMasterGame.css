@@ -1,0 +1,176 @@
+.angle-game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.protractor-container {
+    position: relative;
+    width: 100%;
+    /* Responsive */
+    max-width: 600px;
+    height: 400px;
+    /* Fixed height for now, could be responsive */
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    user-select: none;
+    cursor: crosshair;
+    touch-action: none;
+    /* Prevent scrolling while dragging */
+}
+
+.protractor {
+    cursor: grab;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    transition: transform 0.1s;
+}
+
+.protractor:active {
+    cursor: grabbing;
+}
+
+.controls-area {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+    background: #f1f5f9;
+    border-radius: 0.5rem;
+    flex-wrap: wrap;
+    /* Allow wrapping on small screens */
+}
+
+.slider-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.rotation-slider {
+    flex: 1;
+    height: 8px;
+    border-radius: 4px;
+    background: #cbd5e1;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.rotation-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    /* Larger touch target */
+    height: 24px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.angle-input {
+    width: 80px;
+    padding: 8px;
+    font-size: 1.2rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.angle-input:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+/* Manual Controls */
+.manual-controls {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+    padding: 10px;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.control-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.d-pad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.d-row {
+    display: flex;
+    gap: 2px;
+}
+
+.d-btn {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #cbd5e1;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #334155;
+    transition: all 0.1s;
+    user-select: none;
+}
+
+.d-btn:active {
+    background: #e2e8f0;
+    transform: scale(0.95);
+}
+
+.rotate-controls {
+    display: flex;
+    gap: 10px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .protractor-container {
+        height: 300px;
+    }
+
+    .controls-area {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .slider-group {
+        width: 100%;
+    }
+}

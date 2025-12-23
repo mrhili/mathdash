@@ -1,0 +1,209 @@
+/* Simplify Smash Game Styles */
+
+.simplify-game-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 20px;
+    font-family: 'Inter', sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* The Rock/Fraction Container */
+.rock-container {
+    position: relative;
+    padding: 40px 60px;
+    background: #4b5563;
+    /* Gray Rock Color */
+    border-radius: 20px;
+    box-shadow:
+        inset 0 -10px 20px rgba(0, 0, 0, 0.3),
+        0 20px 40px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s;
+    border: 4px solid #374151;
+}
+
+.rock-container.shake {
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-2px, 0, 0) rotate(-1deg);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(4px, 0, 0) rotate(2deg);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-6px, 0, 0) rotate(-2deg);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(6px, 0, 0) rotate(1deg);
+    }
+}
+
+.fraction-display {
+    font-family: 'KaTeX_Main', serif;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #f3f4f6;
+    text-shadow: 2px 2px 0 #1f2937;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+}
+
+.fraction-line {
+    width: 100%;
+    height: 6px;
+    background: #f3f4f6;
+    margin: 10px 0;
+    border-radius: 3px;
+    box-shadow: 2px 2px 0 #1f2937;
+}
+
+/* Hammers / Tools */
+.tools-rack {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.hammer-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    border: none;
+    background: #f59e0b;
+    /* Amber handle */
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.1s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 0 #d97706;
+    position: relative;
+    overflow: hidden;
+}
+
+.hammer-btn:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+.hammer-btn:hover {
+    background: #fbbf24;
+}
+
+.hammer-btn::before {
+    content: '🔨';
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+/* Particles */
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #f3f4f6;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: flyOut 0.6s ease-out forwards;
+}
+
+@keyframes flyOut {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Feedback */
+.smash-feedback-container {
+    position: absolute;
+    top: -80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    animation: popUp 0.8s ease-out forwards;
+    z-index: 10;
+}
+
+.smash-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ef4444;
+    text-shadow: 2px 2px 0 white;
+}
+
+.smash-details {
+    background: rgba(31, 41, 55, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    margin-top: 5px;
+    font-family: monospace;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.detail-row {
+    white-space: nowrap;
+}
+
+@keyframes popUp {
+    0% {
+        transform: translateY(0) scale(0.5);
+        opacity: 0;
+    }
+
+    20% {
+        transform: translateY(-20px) scale(1.1);
+        opacity: 1;
+    }
+
+    80% {
+        transform: translateY(-40px) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-60px) scale(0.9);
+        opacity: 0;
+    }
+}

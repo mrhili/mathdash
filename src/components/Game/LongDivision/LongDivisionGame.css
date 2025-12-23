@@ -1,0 +1,276 @@
+.long-division-game {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Roboto Mono', monospace;
+    color: #1e293b;
+}
+
+/* Standard Header Source: PowerOfTenGame.css */
+.long-division-game .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 0;
+    /* Remove potential extra padding */
+    background: transparent;
+    /* Remove background */
+    border-radius: 0;
+}
+
+.long-division-game .btn-back {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #1e293b;
+    cursor: pointer;
+    font-weight: normal;
+    /* Reset bold */
+    padding: 0;
+    /* Reset padding */
+}
+
+.long-division-game .game-info {
+    display: flex;
+    gap: 1.5rem;
+    font-weight: 700;
+    font-size: 1.25rem;
+    align-items: center;
+}
+
+.long-division-game .level-badge {
+    /* Resetting badge style to simple text to match PowerOfTen */
+    background: none;
+    color: #1e293b;
+    padding: 0;
+    border-radius: 0;
+    font-weight: 700;
+    font-size: inherit;
+}
+
+/* Normalization Phase */
+.long-division-game .normalization-phase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    background: white;
+    padding: 3rem;
+    border-radius: 20px;
+}
+
+.long-division-game .norm-display {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+/* Solving Interface (French Layout) */
+.long-division-game .solving-interface {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+.long-division-game .french-layout {
+    display: grid;
+    /* Dividend | Bar | Divisor */
+    grid-template-columns: auto min-content min-content;
+    gap: 0;
+    font-size: 2.5rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    line-height: 1.5;
+}
+
+/* Left Column: Dividend */
+.long-division-game .dividend-column {
+    /* Set by inline grid style in JS */
+    /* Allows digits to align perfectly */
+    padding-right: 1rem;
+    grid-gap: 0;
+}
+
+.long-division-game .d-digit {
+    text-align: center;
+    padding: 0 0.1ch;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.long-division-game .d-digit.selected {
+    background-color: #fef08a;
+    /* Highlight */
+}
+
+.long-division-game .d-digit.active-marker {
+    box-shadow: inset 0 -3px 0 #3b82f6;
+}
+
+/* Steps Rows */
+.long-division-game .step-row {
+    text-align: right;
+    /* Numbers align right within span */
+    position: relative;
+    font-weight: 400;
+    color: #475569;
+}
+
+.long-division-game .step-val {
+    position: relative;
+    display: inline-block;
+}
+
+.long-division-game .op {
+    position: absolute;
+    left: -1ch;
+    font-size: 0.8em;
+    color: #94a3b8;
+}
+
+.long-division-game .bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #475569;
+}
+
+.long-division-game .step-row.current {
+    font-weight: bold;
+    color: #1e293b;
+}
+
+/* Middle: Vertical Bar */
+.long-division-game .vertical-bar {
+    width: 2px;
+    background-color: #1e293b;
+    height: 100%;
+}
+
+/* Right Column: Divisor & Quotient */
+.long-division-game .divisor-column {
+    display: flex;
+    flex-direction: column;
+    padding-left: 1rem;
+}
+
+.long-division-game .divisor-val {
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 0.2rem;
+}
+
+.long-division-game .horizontal-bar {
+    width: 100%;
+    height: 2px;
+    background-color: #1e293b;
+    margin-bottom: 0.2rem;
+}
+
+.long-division-game .quotient-val {
+    font-weight: bold;
+    color: #3b82f6;
+    letter-spacing: 0.1ch;
+    min-width: 2ch;
+}
+
+/* Action Panel */
+.long-division-game .action-panel {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+}
+
+.long-division-game .feedback-box {
+    background: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    color: #334155;
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.long-division-game .pulse {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.long-division-game .input-group {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.long-division-game .input-group input {
+    font-size: 1.5rem;
+    width: 100px;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #cbd5e1;
+    padding: 0.5rem;
+}
+
+.long-division-game .btn-primary {
+    background: #3b82f6;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.long-division-game .btn-accent {
+    background: #8b5cf6;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.long-division-game .btn-success {
+    background: #10b981;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .long-division-game .french-layout {
+        font-size: 1.5rem;
+        padding: 1rem;
+    }
+}

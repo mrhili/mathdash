@@ -1,0 +1,186 @@
+.rolling-pi-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.animation-stage {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background: #e0f2fe;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border-bottom: 4px solid #334155;
+    /* The Road */
+}
+
+.unicycle-container {
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+    width: 120px;
+    /* Increased width to prevent squishing */
+    height: 160px;
+    transition: transform 0.1s linear;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    /* Let clicks pass through if needed */
+}
+
+.wheel {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 4px solid #1e293b;
+    background: rgba(255, 255, 255, 0.5);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    /* Critical for circle shape */
+    flex-shrink: 0;
+    /* Prevent squishing */
+}
+
+.spoke {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #1e293b;
+}
+
+.marker {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.seat-post {
+    width: 4px;
+    height: 60px;
+    background: #64748b;
+    margin-bottom: -2px;
+    /* Connect to wheel */
+}
+
+.seat {
+    width: 30px;
+    height: 10px;
+    background: #0f172a;
+    border-radius: 5px;
+}
+
+.path-trace {
+    position: absolute;
+    bottom: 2px;
+    left: 80px;
+    /* Start of wheel center x */
+    height: 4px;
+    background: #ef4444;
+    transform-origin: left;
+}
+
+.measurement-label {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    color: #ef4444;
+    font-size: 1.2rem;
+    white-space: nowrap;
+}
+
+.formula-card {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.formula-step {
+    font-size: 1.2rem;
+    margin: 15px 0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease;
+}
+
+.formula-step.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.highlight {
+    color: #ef4444;
+    font-weight: bold;
+}
+
+/* Game Play Area Styles */
+.game-play-area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.question-card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.answer-input {
+    padding: 12px;
+    font-size: 1.2rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.5rem;
+    width: 120px;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.answer-input:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+.visual-circle {
+    transition: all 0.3s ease;
+}

@@ -1,0 +1,1 @@
+after buiding game registre it within GameConfig and MathCOnetet for registring the concept

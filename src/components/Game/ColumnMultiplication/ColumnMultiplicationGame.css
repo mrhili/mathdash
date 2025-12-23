@@ -1,0 +1,366 @@
+/* --- Mobile-First Layout V2 --- */
+.col-mult-game-v2 {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background: #fdfdfd;
+}
+
+.game-header {
+    flex: 0 0 auto;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Notebook Board - Scalable */
+.game-board-notebook {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Center grid */
+    overflow: auto;
+    background-image: linear-gradient(#f0f0f0 1px, transparent 1px);
+    background-size: 100% 40px;
+    position: relative;
+    padding: 20px 0;
+}
+
+.grid-paper {
+    display: grid;
+    grid-template-columns: repeat(8, 40px);
+    grid-auto-rows: 50px;
+    /* Match background? */
+    gap: 2px;
+    position: relative;
+}
+
+.grid-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    font-family: 'Patrick Hand', cursive;
+    color: #333;
+}
+
+.static {
+    color: #555;
+}
+
+.op-sym {
+    font-size: 1.5rem;
+    color: #777;
+    display: flex;
+    align-items: center;
+}
+
+/* Dynamic Items */
+.val-digit {
+    color: #2196F3;
+}
+
+.val-carry {
+    color: #ff5722;
+    font-size: 1.2rem;
+    transform: translateY(-5px);
+}
+
+/* Cursor Logic */
+.cursor-box {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    pointer-events: none;
+    transition: all 0.1s ease;
+    z-index: 10;
+}
+
+.cursor-normal {
+    border: 3px solid #2196F3;
+    background: rgba(33, 150, 243, 0.1);
+}
+
+.cursor-carry {
+    border: 3px solid #ff5722;
+    background: rgba(255, 87, 34, 0.1);
+}
+
+.shake {
+    animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Numpad Area */
+.numpad-area {
+    flex: 0 0 auto;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+    padding-bottom: 20px;
+    /* Safe area */
+}
+
+.numpad-container {
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.numpad-controls {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-mode-toggle {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.mode-normal {
+    background: #e3f2fd;
+    color: #1976d2;
+    border: 2px solid #2196F3;
+}
+
+.mode-carry {
+    background: #fbe9e7;
+    color: #d84315;
+    border: 2px solid #ff5722;
+}
+
+.toggle-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.numpad-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.btn-numpad {
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    color: #333;
+    box-shadow: 0 3px 0 #ccc;
+    transition: all 0.1s;
+}
+
+.btn-numpad:active {
+    background: #eee;
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #ccc;
+}
+
+/* Overlays */
+.fail-overlay,
+.success-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    text-align: center;
+}
+
+.fail-overlay h2 {
+    color: #d32f2f;
+    font-size: 2rem;
+}
+
+.btn-retry {
+    background: #d32f2f;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    margin-top: 20px;
+}
+
+/* --- Active Guides --- */
+.highlight-top {
+    color: #FF9800;
+    /* Orange Accent */
+    font-weight: bold;
+    transform: scale(1.1);
+}
+
+.highlight-bot {
+    color: #4CAF50;
+    /* Green Accent */
+    font-weight: bold;
+    transform: scale(1.1);
+}
+
+.guide-arrows {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* --- Teacher Bot --- */
+.teacher-bot {
+    position: absolute;
+    top: -60px;
+    /* Float above the grid */
+    right: 0;
+    left: 0;
+    margin: auto;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 20;
+    animation: fadeIn 0.3s ease;
+}
+
+.bot-avatar {
+    font-size: 2.5rem;
+    animation: bounce 2s infinite;
+}
+
+.bot-bubble {
+    background: #FFECB3;
+    /* Matching phase badge */
+    color: #5D4037;
+    border: 2px solid #FFCA28;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    margin-top: 5px;
+}
+
+/* Triangle for bubble */
+.bot-bubble::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 6px 6px;
+    border-style: solid;
+    border-color: transparent transparent #FFCA28 transparent;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Header & Badges */
+.header-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.phase-badge {
+    background: #FFECB3;
+    color: #FF6F00;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin-top: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.toggle-icon {
+    font-size: 1.2rem;
+}
+
+.toggle-text {
+    flex: 1;
+    text-align: left;
+    padding-left: 10px;
+}
+
+/* Cursor Label */
+.cursor-label {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: inherit;
+    color: inherit;
+    /* Inherit from border color */
+    font-size: 0.6rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0.8;
+}
+
+.cursor-normal .cursor-label {
+    background: #2196F3;
+    color: white;
+}
+
+.cursor-carry .cursor-label {
+    background: #ff5722;
+    color: white;
+}
+
+/* Desktop Adjustments */
+@media (min-width: 600px) {
+    .numpad-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .grid-paper {
+        transform: scale(1.2);
+        margin-top: 20px;
+    }
+}

@@ -1,0 +1,81 @@
+.pi-splash-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.intro-animation {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.animation-container {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.bucket-group {
+    transition: transform 1s ease;
+}
+
+.pouring {
+    transform: rotate(45deg) translate(20px, 20px);
+}
+
+.water-stream {
+    animation: flow 1s infinite linear;
+}
+
+@keyframes flow {
+    0% {
+        stroke-dashoffset: 20;
+    }
+
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+.water-fill {
+    transition: height 1s ease-in-out, y 1s ease-in-out;
+}
+
+.explanation-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.formula-highlight {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin: 0.5rem 0;
+    font-family: monospace;
+}
+
+.game-input-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.cylinder-visual {
+    margin: 1rem 0;
+}
+
+.dimension-label {
+    font-size: 0.9rem;
+    fill: #4b5563;
+    font-weight: bold;
+}
