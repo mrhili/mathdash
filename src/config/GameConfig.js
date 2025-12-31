@@ -81,7 +81,9 @@ export const games = [
     { id: 'unit-capacity', component: UnitCapacityGame, category: 'units', translationKey: 'game.unitCapacity', icon: '🥛', color: '#0ea5e9' },
     { id: 'unit-area', component: UnitAreaGame, category: 'units', translationKey: 'game.unitArea', icon: '🔲', color: '#10b981' },
     { id: 'unit-volume', component: UnitVolumeGame, category: 'units', translationKey: 'game.unitVolume', icon: '🧊', color: '#8b5cf6' },
-    { id: 'unit-time', component: UnitTimeGame, category: 'units', translationKey: 'game.unitTime', icon: '⏳', color: '#ec4899' }
+    { id: 'unit-time', component: UnitTimeGame, category: 'units', translationKey: 'game.unitTime', icon: '⏳', color: '#ec4899' },
+
+    // Special Features
 ];
 
 export const getGameById = (id) => games.find(g => g.id === id);

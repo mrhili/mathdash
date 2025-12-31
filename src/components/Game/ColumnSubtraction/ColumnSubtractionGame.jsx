@@ -36,7 +36,7 @@ const Numpad = ({ onInput }) => (
     </div>
 );
 
-const ColumnSubtractionGame = ({ onBack }) => {
+const ColumnSubtractionGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { language, t: globalT } = useLanguage();
 
     const t = (key, params = {}) => {
@@ -46,7 +46,7 @@ const ColumnSubtractionGame = ({ onBack }) => {
     };
 
     const { progress, saveProgress } = useGameState('column-subtraction');
-    const currentLevel = progress.level || 1;
+    const currentLevel = isTestMode ? testLevel : (progress.level || 1);
     const currentScore = progress.score || 0;
 
     // --- State ---
@@ -236,6 +236,12 @@ const ColumnSubtractionGame = ({ onBack }) => {
         } else {
             const totalScore = currentScore + levelScore;
             setPhase('SUCCESS');
+
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(true), 1500);
+                return;
+            }
+
             saveProgress({
                 level: currentLevel + 1,
                 score: totalScore,
@@ -371,8 +377,13 @@ const ColumnSubtractionGame = ({ onBack }) => {
                 <div className="fail-overlay">
                     <h2>{t('gameOver')}</h2>
                     <p>{failReason}</p>
-                    <p>Level Score: {levelScore}</p>
-                    <button className="btn-retry" onClick={loadLevel}>{t('retry')} ↺</button>
+                    {isTestMode ? (
+                        <button className="btn-retry" onClick={() => onTestComplete(false)}>
+                            {globalT('btn.continue')} ➔
+                        </button>
+                    ) : (
+                        <button className="btn-retry" onClick={loadLevel}>{t('retry')} ↺</button>
+                    )}
                 </div>
             )}
             {phase === 'SUCCESS' && (

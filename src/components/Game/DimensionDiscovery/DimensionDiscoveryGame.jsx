@@ -131,7 +131,7 @@ const SHAPES = [
 // Filter to only 1D, 2D, 3D for the main game loop
 const GAME_SHAPES = SHAPES.filter(s => ['1D', '2D', '3D'].includes(s.type));
 
-const DimensionDiscoveryGame = ({ onBack }) => {
+const DimensionDiscoveryGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('dimension-discovery');
     const { language, t: globalT } = useLanguage();
 
@@ -146,9 +146,11 @@ const DimensionDiscoveryGame = ({ onBack }) => {
     const [currentShape, setCurrentShape] = useState(null);
     const [gameState, setGameState] = useState('playing'); // playing, won, lost
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         const randomShape = GAME_SHAPES[Math.floor(Math.random() * GAME_SHAPES.length)];
@@ -160,14 +162,23 @@ const DimensionDiscoveryGame = ({ onBack }) => {
         if (gameState !== 'playing') return;
 
         if (choice === currentShape.type) {
-            if (progress.level === 10) {
+            if (isTestMode && onTestComplete) {
+                setGameState('won');
+                setTimeout(() => onTestComplete(true), 1000);
+                return;
+            }
+
+            if (currentLevel === 10) {
                 setGameState('won');
                 winGame(20); // 10 levels + 10 bonus
             } else {
-                completeLevel(progress.level + 1, progress.level); // Score = level number
+                completeLevel(currentLevel + 1, progress.level); // Score = level number
             }
         } else {
             setGameState('lost');
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1000);
+            }
         }
     };
 

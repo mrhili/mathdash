@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const FractionSlicerGame = ({ onBack }) => {
+const FractionSlicerGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('fraction-slicer');
     const { language, t: globalT } = useLanguage();
 
@@ -15,6 +15,8 @@ const FractionSlicerGame = ({ onBack }) => {
         const localKey = key.replace('game.fractionSlicer.', '');
         return dict[localKey] || globalT(key);
     };
+
+    const currentLevel = isTestMode ? testLevel : progress.level;
 
     const [targetNumerator, setTargetNumerator] = useState(1);
     const [targetDenominator, setTargetDenominator] = useState(2);
@@ -32,30 +34,27 @@ const FractionSlicerGame = ({ onBack }) => {
 
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         let num, den;
-        const level = progress.level;
+        const level = currentLevel;
 
         // 50-Level Progression
+        // ... (reuse logic)
         if (level <= 5) {
-            // Halves, Quarters (2, 4)
             const dens = [2, 4];
             den = dens[randomInt(0, 1)];
             num = randomInt(1, den - 1);
         } else if (level <= 15) {
-            // Thirds, Sixths, Eighths (3, 6, 8)
             const dens = [3, 6, 8];
             den = dens[randomInt(0, 2)];
             num = randomInt(1, den - 1);
         } else if (level <= 30) {
-            // Fifths, Tenths, Twelfths (5, 10, 12)
             const dens = [5, 10, 12];
             den = dens[randomInt(0, 2)];
             num = randomInt(1, den - 1);
         } else {
-            // Primes/Odd (7, 9, 11, 13)
             const dens = [7, 9, 11, 13];
             den = dens[randomInt(0, 3)];
             num = randomInt(1, den - 1);
@@ -72,6 +71,7 @@ const FractionSlicerGame = ({ onBack }) => {
     };
 
     // --- SVG LOGIC ---
+    // ... (unchanged)
     const getSlicePath = (index, total) => {
         if (total === 1) {
             return "M 150 150 m -145 0 a 145 145 0 1 0 290 0 a 145 145 0 1 0 -290 0"; // Full circle
@@ -111,7 +111,15 @@ const FractionSlicerGame = ({ onBack }) => {
             setFeedback(t('good'));
         } else {
             setFeedback(t('incorrectCuts'));
-            setTimeout(() => setFeedback(null), 1500);
+            setTimeout(() => {
+                setFeedback(null);
+                if (isTestMode && onTestComplete) {
+                    // Strict fail in test mode? Or should we allow them to fix it?
+                    // Let's allow fixing cut as it's part of the process, but maybe track it?
+                    // If we want strict, we could fail here.
+                    // Decision: Allow retrying cut, but checkAnswer is the final commit.
+                }
+            }, 1500);
         }
     };
 
@@ -140,14 +148,24 @@ const FractionSlicerGame = ({ onBack }) => {
 
             // Show success state briefly before moving on
             setTimeout(() => {
-                if (progress.level < 50) {
-                    completeLevel(progress.level + 1, 10);
+                if (isTestMode && onTestComplete) {
+                    onTestComplete(true);
+                    return;
+                }
+
+                if (currentLevel < 50) {
+                    completeLevel(currentLevel + 1, 10);
                 } else {
                     winGame(10);
                 }
-            }, 2500); // Give them time to read the math
+            }, 2500);
         } else {
             setFeedback(t('wrongSelection').replace('{count}', filledSlices.length).replace('{target}', targetNumerator));
+            setTimeout(() => {
+                if (isTestMode && onTestComplete) {
+                    onTestComplete(false);
+                }
+            }, 1500);
         }
     };
 

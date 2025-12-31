@@ -5,7 +5,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const FractionScaleGame = ({ onBack }) => {
+const FractionScaleGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('fraction-scale');
     const { language, t: globalT } = useLanguage();
 
@@ -22,18 +22,20 @@ const FractionScaleGame = ({ onBack }) => {
     const [zoomLevel, setZoomLevel] = useState(0);
     const [gameState, setGameState] = useState('playing');
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         let decimals = 0;
-        if (progress.level === 2) decimals = 1;
-        if (progress.level === 3) decimals = 2;
-        if (progress.level >= 4) decimals = 3;
+        if (currentLevel === 2) decimals = 1;
+        if (currentLevel === 3) decimals = 2;
+        if (currentLevel >= 4) decimals = 3;
 
         let num = Math.random() * 100;
-        if (progress.level === 1) num = Math.floor(num);
+        if (currentLevel === 1) num = Math.floor(num);
         else num = parseFloat(num.toFixed(decimals));
 
         setTargetNumber(num);
@@ -71,7 +73,12 @@ const FractionScaleGame = ({ onBack }) => {
             setViewRange({ min: start, max: end });
             setZoomLevel(prev => prev + 1);
         } else {
-            alert(t('lookCloser'));
+            alert(t('lookCloser')); // Keep alert or use toast
+            if (isTestMode && onTestComplete) {
+                // Strict fail on wrong zoom choice?
+                // Probably yes.
+                onTestComplete(false);
+            }
         }
     };
 
@@ -79,14 +86,25 @@ const FractionScaleGame = ({ onBack }) => {
         if (gameState !== 'playing') return;
 
         if (Math.abs(val - targetNumber) < 0.0001) {
-            if (progress.level === 5) {
+            if (isTestMode && onTestComplete) {
+                setGameState('won');
+                setTimeout(() => onTestComplete(true), 1500);
+                return;
+            }
+
+            if (currentLevel === 5) { // Assuming 5 levels
                 setGameState('won');
                 winGame(25);
             } else {
                 setGameState('won');
                 setTimeout(() => {
-                    completeLevel(progress.level + 1, progress.score + 10);
+                    completeLevel(currentLevel + 1, progress.score + 10);
                 }, 1500);
+            }
+        } else {
+            if (isTestMode && onTestComplete) {
+                // Wrong tick
+                onTestComplete(false);
             }
         }
     };

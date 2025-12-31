@@ -274,3 +274,116 @@
         padding: 1rem;
     }
 }
+
+/* Verification UI */
+.long-division-game .verification-ui {
+    background: #f8fafc;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    border: 2px solid #e2e8f0;
+    margin: 0 auto;
+}
+
+.long-division-game .verification-ui h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #3b82f6;
+}
+
+.long-division-game .formula-verify {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.long-division-game .formula-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.long-division-game .input-with-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.long-division-game .input-with-label label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.long-division-game .input-with-label input {
+    width: 90px;
+    padding: 0.6rem;
+    font-size: 1.4rem;
+    text-align: center;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    color: #1e293b;
+    font-weight: 800;
+}
+
+.long-division-game .static-val {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.long-division-game .static-val label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.long-division-game .static-val span {
+    padding: 0.6rem;
+    font-size: 1.4rem;
+    min-width: 50px;
+    text-align: center;
+    background: #f1f5f9;
+    border-radius: 8px;
+    color: #475569;
+}
+
+.long-division-game .op {
+    font-size: 2rem;
+    color: #94a3b8;
+    padding-top: 1.2rem;
+    /* Visually align with inputs */
+}
+
+.long-division-game .verify-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.25rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.long-division-game .verify-btn:hover {
+    background: #2563eb;
+}

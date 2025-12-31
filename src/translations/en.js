@@ -284,6 +284,8 @@ export const en = {
     "game.longDivision.desc": "Master the step-by-step paper algorithm!",
     "game.longDivision.normalize": "Normalization",
     "game.longDivision.solve": "Solve",
+    "game.longDivision.quotient": "Quotient",
+    "game.longDivision.remainder": "Remainder",
 
     // Scale Explorer
     "game.scaleExplorer.title": "Scale Explorer",
@@ -336,5 +338,9 @@ export const en = {
     "game.gameOver": "Game Over!",
     "game.retry": "Try Again",
     "game.wrongDigit": "Wrong digit!",
-    "game.wrongMode": "Wrong mode (Carry)!"
+    "game.wrongMode": "Wrong mode (Carry)!",
+
+    // Features
+    "feature.testRunner.title": "Math Test",
+    "feature.testRunner.desc": "Test your skills with random mixed questions!"
 };

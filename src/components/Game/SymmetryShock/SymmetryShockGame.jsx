@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const SymmetryShockGame = ({ onBack }) => {
+const SymmetryShockGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('symmetry-shock');
     const { language, t: globalT } = useLanguage();
 
@@ -26,10 +26,12 @@ const SymmetryShockGame = ({ onBack }) => {
     const CANVAS_SIZE = GRID_SIZE * CELL_SIZE;
     const CENTER = CANVAS_SIZE / 2;
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
-        startLevel(progress.level);
+        startLevel(currentLevel);
         return () => clearInterval(timerRef.current);
-    }, [progress.level]);
+    }, [currentLevel]);
 
     useEffect(() => {
         if (timeLeft > 0 && gameState === 'playing') {
@@ -38,6 +40,9 @@ const SymmetryShockGame = ({ onBack }) => {
                     if (prev <= 1) {
                         clearInterval(timerRef.current);
                         setGameState('lost');
+                        if (isTestMode && onTestComplete) {
+                            setTimeout(() => onTestComplete(false), 1000);
+                        }
                         return 0;
                     }
                     return prev - 1;
@@ -45,7 +50,7 @@ const SymmetryShockGame = ({ onBack }) => {
             }, 1000);
         }
         return () => clearInterval(timerRef.current);
-    }, [timeLeft, gameState]);
+    }, [timeLeft, gameState, isTestMode]);
 
     const startLevel = (level) => {
         const config = generateLevel(level);
@@ -145,12 +150,18 @@ const SymmetryShockGame = ({ onBack }) => {
 
         if (allCorrect) {
             setFeedback('correct');
+            if (isTestMode && onTestComplete) {
+                setGameState('won');
+                setTimeout(() => onTestComplete(true), 1000);
+                return;
+            }
+
             setTimeout(() => {
-                if (progress.level === 50) {
+                if (currentLevel === 50) {
                     setGameState('won');
                     winGame(100);
                 } else {
-                    completeLevel(progress.level + 1, progress.score + (levelConfig.timeLimit ? 20 : 10));
+                    completeLevel(currentLevel + 1, progress.score + (levelConfig.timeLimit ? 20 : 10));
                 }
             }, 1000);
         } else {
@@ -161,6 +172,9 @@ const SymmetryShockGame = ({ onBack }) => {
     const handleIncorrect = () => {
         setFeedback('incorrect');
         setGameState('lost');
+        if (isTestMode && onTestComplete) {
+            setTimeout(() => onTestComplete(false), 1000);
+        }
     };
 
     const reflectPoint = (p, axis) => {

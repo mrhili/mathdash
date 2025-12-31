@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const AreaQuestGame = ({ onBack }) => {
+const AreaQuestGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('area-quest');
     const { language, t: globalT } = useLanguage();
 
@@ -38,9 +38,11 @@ const AreaQuestGame = ({ onBack }) => {
     const [userAnswer, setUserAnswer] = useState('');
     const [ruleOptions, setRuleOptions] = useState([]);
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const shuffleArray = (array) => {
         const newArray = [...array];
@@ -54,14 +56,14 @@ const AreaQuestGame = ({ onBack }) => {
     const startLevel = () => {
         // Determine shape type based on level
         let type = 'square';
-        if (progress.level === 2) type = 'rectangle';
-        if (progress.level === 3) type = 'triangle';
-        if (progress.level === 4) type = 'parallelogram';
-        if (progress.level === 5) type = 'trapezoid';
-        if (progress.level === 6) type = 'rhombus';
+        if (currentLevel === 2) type = 'rectangle';
+        if (currentLevel === 3) type = 'triangle';
+        if (currentLevel === 4) type = 'parallelogram';
+        if (currentLevel === 5) type = 'trapezoid';
+        if (currentLevel === 6) type = 'rhombus';
 
         // For levels > 6, mix them up
-        if (progress.level > 6) {
+        if (currentLevel > 6) {
             const rand = Math.random();
             if (rand < 0.16) type = 'square';
             else if (rand < 0.33) type = 'rectangle';
@@ -155,6 +157,9 @@ const AreaQuestGame = ({ onBack }) => {
             setPhase('calculate');
         } else {
             setGameState('lost');
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1000);
+            }
         }
     };
 
@@ -175,14 +180,23 @@ const AreaQuestGame = ({ onBack }) => {
 
         // Allow flexible input (e.g. 12 or 12.0)
         if (parseFloat(userAnswer) === correctArea) {
-            if (progress.level === 6) {
+            if (isTestMode && onTestComplete) {
+                setGameState('won');
+                setTimeout(() => onTestComplete(true), 1000);
+                return;
+            }
+
+            if (currentLevel === 6) {
                 setGameState('won');
                 winGame(16); // 6 levels + 10 bonus
             } else {
-                completeLevel(progress.level + 1, progress.level);
+                completeLevel(currentLevel + 1, progress.level);
             }
         } else {
             setGameState('lost');
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1000);
+            }
         }
     };
 

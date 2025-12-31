@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const FractionMatchGame = ({ onBack }) => {
+const FractionMatchGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('fraction-match');
     const { language, t: globalT } = useLanguage();
 
@@ -27,6 +27,8 @@ const FractionMatchGame = ({ onBack }) => {
     const [feedback, setFeedback] = useState(null);
     const [gameState, setGameState] = useState('playing');
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     // Helper: Random Int [min, max]
     const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
     // Helper: GCD
@@ -34,41 +36,36 @@ const FractionMatchGame = ({ onBack }) => {
 
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         let f1, f2, op = '+';
-        const level = progress.level;
+        const level = currentLevel;
 
         // 50-Level Progression
+        // ... (reuse logic)
         if (level <= 10) {
-            // Simple Multiples (e.g., 1/2 + 1/4)
             const base = randomInt(2, 5);
             const mult = randomInt(2, 3);
             f1 = { n: 1, d: base };
             f2 = { n: randomInt(1, base * mult - 1), d: base * mult };
         } else if (level <= 20) {
-            // Common Factors (e.g., 1/6 + 1/4 -> 12)
             f1 = { n: 1, d: 4 };
             f2 = { n: 1, d: 6 };
             if (Math.random() > 0.5) { f1.d = 6; f2.d = 9; }
         } else if (level <= 30) {
-            // Primes (e.g., 1/3 + 1/5 -> 15)
             f1 = { n: randomInt(1, 2), d: 3 };
             f2 = { n: randomInt(1, 4), d: 5 };
         } else {
-            // Harder
             f1 = { n: randomInt(1, 5), d: randomInt(3, 8) };
             f2 = { n: randomInt(1, 5), d: randomInt(3, 8) };
         }
 
-        // Randomize operator for higher levels
         if (level > 30 && Math.random() > 0.5) op = '-';
 
-        // Ensure result isn't negative for subtraction
         if (op === '-') {
             if (f1.n / f1.d < f2.n / f2.d) {
-                [f1, f2] = [f2, f1]; // Swap
+                [f1, f2] = [f2, f1];
             }
         }
 
@@ -83,19 +80,15 @@ const FractionMatchGame = ({ onBack }) => {
 
     const handleFractionClick = (index) => {
         if (gameState !== 'playing') return;
-
-        // If result exists, we can only click result (index 'result')
         if (result && index !== 'result') return;
-        // If result doesn't exist, we can only click 0 or 1
         if (!result && index === 'result') return;
 
         if (selectedFractionIndex === index) {
-            // Deselect
             setSelectedFractionIndex(null);
             setActionType(null);
         } else {
             setSelectedFractionIndex(index);
-            setActionType(null); // Reset action when switching selection
+            setActionType(null);
         }
     };
 
@@ -118,12 +111,13 @@ const FractionMatchGame = ({ onBack }) => {
             target.d *= factor;
             updateFraction(target);
         } else if (actionType === 'divide') {
-            // Validation: Must result in integers
             if (target.n % factor !== 0 || target.d % factor !== 0) {
-                const decimalN = target.n / factor;
-                const decimalD = target.d / factor;
                 setFeedback({ type: 'error', msg: t('noDecimals') });
-                setTimeout(() => setFeedback(null), 3000);
+                setTimeout(() => {
+                    setFeedback(null);
+                    // Strict mode penalty for invalid division?
+                    // if (isTestMode) onTestComplete(false);
+                }, 3000);
                 return;
             }
             target.n /= factor;
@@ -148,35 +142,40 @@ const FractionMatchGame = ({ onBack }) => {
     const handleSolve = () => {
         const [f1, f2] = fractions;
 
-        // Validation: Denominators must match
         if (f1.d !== f2.d) {
             setFeedback({ type: 'error', msg: t('matchDenom') });
-            setTimeout(() => setFeedback(null), 2000);
+            setTimeout(() => {
+                setFeedback(null);
+                if (isTestMode && onTestComplete) {
+                    // Fail if trying to solve without matching denoms
+                    onTestComplete(false);
+                }
+            }, 2000);
             return;
         }
 
-        // Calculate Result
         let resN;
         if (operator === '+') resN = f1.n + f2.n;
         else resN = f1.n - f2.n;
 
         const res = { n: resN, d: f1.d };
         setResult(res);
-
-        // Check if already simplified (Win condition)
         checkWin(res);
     };
 
     const checkWin = (res) => {
-        // Check if simplified
         const common = gcd(res.n, res.d);
         if (common === 1) {
-            // Win!
             setFeedback({ type: 'success', msg: `${t('correctResult')} ${res.n}/${res.d}` });
             setGameState('won');
             setTimeout(() => {
-                if (progress.level < 50) {
-                    completeLevel(progress.level + 1, 20);
+                if (isTestMode && onTestComplete) {
+                    onTestComplete(true);
+                    return;
+                }
+
+                if (currentLevel < 50) {
+                    completeLevel(currentLevel + 1, 20);
                 } else {
                     winGame(20);
                 }

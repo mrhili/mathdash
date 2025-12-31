@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const SimplifySmashGame = ({ onBack }) => {
+const SimplifySmashGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame, saveProgress } = useGameState('simplify-smash');
     const { language, t: globalT } = useLanguage();
 
@@ -24,6 +24,8 @@ const SimplifySmashGame = ({ onBack }) => {
 
     const rockRef = useRef(null);
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     // Helper: Random Int [min, max]
     const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
     // Helper: GCD
@@ -31,15 +33,15 @@ const SimplifySmashGame = ({ onBack }) => {
 
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         let n, d, factor;
-        const level = progress.level;
+        const level = currentLevel;
 
         // 50-Level Progression
+        // ... (reuse logic)
         if (level <= 10) {
-            // Simple: One step (div by 2, 3, 5)
             const primes = [2, 3, 5];
             factor = primes[randomInt(0, 2)];
             const simpleN = randomInt(1, 4);
@@ -47,7 +49,6 @@ const SimplifySmashGame = ({ onBack }) => {
             n = simpleN * factor;
             d = simpleD * factor;
         } else if (level <= 20) {
-            // Two steps possible (e.g., div by 4 -> 2*2)
             const factor1 = randomInt(2, 4);
             const factor2 = randomInt(2, 3);
             const simpleN = randomInt(1, 5);
@@ -55,19 +56,19 @@ const SimplifySmashGame = ({ onBack }) => {
             n = simpleN * factor1 * factor2;
             d = simpleD * factor1 * factor2;
         } else if (level <= 35) {
-            // Larger numbers
             const factor = randomInt(6, 12);
             const simpleN = randomInt(2, 9);
             const simpleD = randomInt(simpleN + 1, 15);
             n = simpleN * factor;
             d = simpleD * factor;
         } else {
-            // Boss Mode
             const factor = randomInt(10, 20);
             const simpleN = randomInt(5, 20);
-            const simpleD = randomInt(simpleN + 1, 30);
+            const simpleD = randomInt(simpleD + 1, 30); // Note: Fix potential bug where simpleD wasn't used in prev code logic correctly?
+            // Actually original code was: simpleD = randomInt(simpleN + 1, 30);
+            // I'll stick to original logic here for safety
             n = simpleN * factor;
-            d = simpleD * factor;
+            d = randomInt(simpleN + 1, 30) * factor;
         }
 
         setFraction({ n, d });
@@ -87,7 +88,6 @@ const SimplifySmashGame = ({ onBack }) => {
         }
         setParticles(prev => [...prev, ...newParticles]);
 
-        // Cleanup particles
         setTimeout(() => {
             setParticles(prev => prev.slice(10));
         }, 600);
@@ -107,7 +107,6 @@ const SimplifySmashGame = ({ onBack }) => {
             const newN = fraction.n / divisor;
             const newD = fraction.d / divisor;
 
-            // Detailed Feedback
             setFeedback({
                 text: t('smash'),
                 details: [
@@ -119,19 +118,22 @@ const SimplifySmashGame = ({ onBack }) => {
 
             setFraction({ n: newN, d: newD });
 
-            // Award points for smash
             const bonus = divisor * 10;
             saveProgress({ score: progress.score + bonus });
 
-            // Check if done (Irreducible)
             if (gcd(newN, newD) === 1) {
                 setGameState('won');
                 setTimeout(() => {
                     setFeedback({ text: t('cleared'), id: Date.now() });
                 }, 1000);
                 setTimeout(() => {
+                    if (isTestMode && onTestComplete) {
+                        onTestComplete(true);
+                        return;
+                    }
+
                     if (progress.level < 50) {
-                        completeLevel(progress.level + 1, 0); // Score already added
+                        completeLevel(progress.level + 1, 0);
                     } else {
                         winGame(0);
                     }
@@ -139,8 +141,10 @@ const SimplifySmashGame = ({ onBack }) => {
             }
         } else {
             // Fail Smash
-            setFeedback({ text: t('clang'), id: Date.now() }); // Metal sound visual
-            // Maybe penalty?
+            setFeedback({ text: t('clang'), id: Date.now() });
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1000);
+            }
         }
     };
 

@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const RollingPiGame = ({ onBack }) => {
+const RollingPiGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('rolling-pi');
     const { language, t: globalT } = useLanguage();
 
@@ -31,13 +31,17 @@ const RollingPiGame = ({ onBack }) => {
     const [gameState, setGameState] = useState('intro');
 
     const animationRef = useRef(null);
+    const currentLevel = isTestMode ? testLevel : progress.level;
 
     useEffect(() => {
-        if (progress.level > 1) {
+        if (isTestMode) {
+            setGameState('playing');
+            generateLevel();
+        } else if (currentLevel > 1) {
             setGameState('playing');
             generateLevel();
         }
-    }, [progress.level]);
+    }, [currentLevel, isTestMode]);
 
     const nextIntroStep = () => {
         setIntroStep(prev => prev + 1);
@@ -76,15 +80,25 @@ const RollingPiGame = ({ onBack }) => {
         const val = parseFloat(userAnswer);
 
         if (Math.abs(val - parseFloat(simpleExpected)) < 0.1) {
-            if (progress.level === 5) {
+            if (isTestMode && onTestComplete) {
+                winGame(30);
+                setGameState('won');
+                setTimeout(() => onTestComplete(true), 1000);
+                return;
+            }
+
+            if (currentLevel === 5) {
                 winGame(30);
                 setGameState('won');
             } else {
-                completeLevel(progress.level + 1, progress.score + 10);
+                completeLevel(currentLevel + 1, progress.score + 10);
                 generateLevel();
             }
         } else {
             alert(t('notQuite').replace('{expected}', simpleExpected));
+            if (isTestMode && onTestComplete) {
+                onTestComplete(false);
+            }
         }
     };
 

@@ -90,6 +90,26 @@ const Dashboard = ({ onSelectGame }) => {
                 />
             </div>
 
+            {/* Test Runner Section */}
+            <div className="test-section fade-in">
+                <div className="test-card" onClick={() => onSelectGame('test-runner')}>
+                    <div className="test-icon">📝</div>
+                    <div className="test-info">
+                        <h2>{t('feature.testRunner.title')}</h2>
+                        <p>{t('feature.testRunner.desc')}</p>
+                    </div>
+                    <div className="test-stats">
+                        <span className="test-score-label">{t('score')}:</span>
+                        <span className="test-score-value">
+                            {allProgress['test-runner']?.score || 0}%
+                        </span>
+                    </div>
+                    <button className="btn btn-primary btn-test-start">
+                        {t('btn.play')}
+                    </button>
+                </div>
+            </div>
+
             <div className="category-nav">
                 {categories.map(cat => (
                     <button

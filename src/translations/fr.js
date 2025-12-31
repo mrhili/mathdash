@@ -472,6 +472,8 @@ export const fr = {
     "game.longDivision.desc": "Maîtrise l'algorithme sur papier étape par étape !",
     "game.longDivision.normalize": "Normalisation",
     "game.longDivision.solve": "Résoudre",
+    "game.longDivision.quotient": "Quotient",
+    "game.longDivision.remainder": "Reste",
 
     // Scale Explorer
     "game.scaleExplorer.title": "Explorateur d'Échelle",
@@ -723,5 +725,9 @@ export const fr = {
     "game.gameOver": "Game Over!",
     "game.retry": "Réessayer",
     "game.wrongDigit": "Mauvais chiffre !",
-    "game.wrongMode": "Mauvaise mode (Retenue) !"
+    "game.wrongMode": "Mauvaise mode (Retenue) !",
+
+    // Features
+    "feature.testRunner.title": "Test de Maths",
+    "feature.testRunner.desc": "Teste tes compétences avec des questions mélangées !"
 };

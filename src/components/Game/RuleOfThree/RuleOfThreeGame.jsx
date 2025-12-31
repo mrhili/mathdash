@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const RuleOfThreeGame = ({ onBack }) => {
+const RuleOfThreeGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('rule-of-three');
     const { language, t: globalT } = useLanguage();
 
@@ -27,9 +27,11 @@ const RuleOfThreeGame = ({ onBack }) => {
     const [diagonalProduct, setDiagonalProduct] = useState(0);
     const [correctAnswer, setCorrectAnswer] = useState(0);
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         // Generate numbers based on level
@@ -98,6 +100,9 @@ const RuleOfThreeGame = ({ onBack }) => {
                     setTimeout(() => {
                         alert(t('invalidPair'));
                         setSelectedCells([]);
+                        if (isTestMode && onTestComplete) {
+                            onTestComplete(false);
+                        }
                     }, 500);
                 }
             }
@@ -115,13 +120,21 @@ const RuleOfThreeGame = ({ onBack }) => {
     const handleSolve = () => {
         const val = parseFloat(userInput);
         if (Math.abs(val - correctAnswer) < 0.01) {
-            if (progress.level === 50) {
+            if (isTestMode && onTestComplete) {
+                onTestComplete(true);
+                return;
+            }
+
+            if (currentLevel === 50) {
                 winGame(50);
             } else {
-                completeLevel(progress.level + 1, progress.score + 10);
+                completeLevel(currentLevel + 1, progress.score + 10);
             }
         } else {
             alert(t('checkMath').replace('{product}', diagonalProduct).replace('{loner}', tableData[lonerCell]));
+            if (isTestMode && onTestComplete) {
+                onTestComplete(false);
+            }
         }
     };
 

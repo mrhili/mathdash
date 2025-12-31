@@ -3,7 +3,7 @@ import UnitGameBase from './UnitGameBase';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const UnitTimeGame = ({ onBack }) => {
+const UnitTimeGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { language, t: globalT } = useLanguage();
 
     const t = (key) => {
@@ -33,7 +33,7 @@ const UnitTimeGame = ({ onBack }) => {
         ]
     };
 
-    return <UnitGameBase config={config} onBack={onBack} />;
+    return <UnitGameBase config={config} onBack={onBack} isTestMode={isTestMode} testLevel={testLevel} onTestComplete={onTestComplete} />;
 };
 
 export default UnitTimeGame;

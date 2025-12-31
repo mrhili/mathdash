@@ -5,7 +5,7 @@ import { getLevel } from './Levels';
 import { translations } from './translations';
 import './LongDivisionGame.css';
 
-const LongDivisionGame = ({ onBack }) => {
+const LongDivisionGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { language, t: globalT } = useLanguage();
 
     // Local Translation Helper with Params Support
@@ -28,7 +28,7 @@ const LongDivisionGame = ({ onBack }) => {
 
     const { progress, saveProgress } = useGameState('long-division');
 
-    const currentLevel = progress.level || 1;
+    const currentLevel = isTestMode ? testLevel : (progress.level || 1);
 
     // --- State ---
     const [phase, setPhase] = useState('normalization');
@@ -51,9 +51,25 @@ const LongDivisionGame = ({ onBack }) => {
     const [userInput, setUserInput] = useState('');
     const [feedback, setFeedback] = useState('');
     const [selection, setSelection] = useState({ start: 0, end: 0 });
+    const [mistakes, setMistakes] = useState(0);
+
+    const handleError = (msg) => {
+        setFeedback(msg);
+        setMistakes(prev => {
+            const newM = prev + 1;
+            if (isTestMode && newM >= 3) {
+                setPhase('fail');
+            }
+            return newM;
+        });
+    };
 
     // Verification State
     const [verificationInput, setVerificationInput] = useState('');
+    const [verifyQ, setVerifyQ] = useState('');
+    const [verifyR, setVerifyR] = useState('');
+    const [verifyD, setVerifyD] = useState('');
+    const [vfStep, setVfStep] = useState(0); // 0=Q, 1=R, 2=Check
 
     // --- Level Loading (On Mount or Level Change) ---
     useEffect(() => {
@@ -72,6 +88,11 @@ const LongDivisionGame = ({ onBack }) => {
         setFeedback("");
         setUserInput("");
         setVerificationInput("");
+        setMistakes(0);
+        // Reset Verification Phase State
+        setVerifyQ("");
+        setVerifyR("");
+        setVfStep(0); // 0 = Input, 1 = Success
 
     }, [currentLevel]);
 
@@ -140,7 +161,7 @@ const LongDivisionGame = ({ onBack }) => {
             setUserInput('');
             setFeedback(t('multiply', { val, divisor: workingProb.divisor }));
         } else {
-            setFeedback(t('incorrectDiv', { divisor: workingProb.divisor, currentRemainder }));
+            handleError(t('incorrectDiv', { divisor: workingProb.divisor, currentRemainder }));
         }
     };
 
@@ -162,7 +183,7 @@ const LongDivisionGame = ({ onBack }) => {
             setUserInput('');
             setFeedback(t('subtract', { currentRemainder, val }));
         } else {
-            setFeedback(t('incorrect'));
+            handleError(t('incorrect'));
         }
     };
 
@@ -194,7 +215,7 @@ const LongDivisionGame = ({ onBack }) => {
             }
             setUserInput('');
         } else {
-            setFeedback(t('incorrectSub'));
+            handleError(t('incorrectSub'));
         }
     };
 
@@ -210,20 +231,17 @@ const LongDivisionGame = ({ onBack }) => {
     };
 
     // --- Phase 3: Verification & Next Level ---
-
     const submitVerification = () => {
-        const val = parseInt(verificationInput);
-        if (isNaN(val)) return;
+        const trueQ = parseInt(quotient || 0);
+        const trueR = currentRemainder;
+        const inputQ = parseInt(verifyQ);
+        const inputR = parseInt(verifyR);
 
-        // Formula: (Q * D) + R = Dividend
-        if (val === workingProb.dividend) {
+        if (inputQ === trueQ && inputR === trueR) {
             setFeedback(t('verified'));
             setPhase('complete');
         } else {
-            const q = parseInt(quotient || 0);
-            const r = currentRemainder;
-            const d = workingProb.divisor;
-            setFeedback(t('checkPrompt', { q, d, r }));
+            handleError(t('incorrect'));
         }
     };
 
@@ -232,6 +250,12 @@ const LongDivisionGame = ({ onBack }) => {
     const handleNextLevel = () => {
         if (isSaving) return;
         setIsSaving(true);
+
+        if (isTestMode && onTestComplete) {
+            onTestComplete(true);
+            return;
+        }
+
         const newScore = (progress.score || 0) + 100;
         saveProgress({ level: currentLevel + 1, score: newScore });
         setTimeout(() => setIsSaving(false), 2000);
@@ -260,6 +284,10 @@ const LongDivisionGame = ({ onBack }) => {
                     </div>
                     <div className="norm-controls">
                         <button className="btn btn-secondary" onClick={handleShiftDecimal}>× 10</button>
+                        <button className="btn btn-secondary" onClick={() => setWorkingProb(prev => ({
+                            dividend: Math.round(prev.dividend / 10 * 100) / 100,
+                            divisor: Math.round(prev.divisor / 10 * 100) / 100
+                        }))}>÷ 10</button>
                         <button className="btn btn-primary" onClick={handleConfirmNormalization}>{t('startSolving')}</button>
                     </div>
                     <p className="feedback">{feedback}</p>
@@ -359,17 +387,43 @@ const LongDivisionGame = ({ onBack }) => {
 
                         {phase === 'verification' && (
                             <div className="verification-ui">
-                                <p>{t('verifyPrompt')}</p>
-                                <div className="input-group">
-                                    <input
-                                        autoFocus
-                                        type="number"
-                                        value={verificationInput}
-                                        onChange={(e) => setVerificationInput(e.target.value)}
-                                        onKeyDown={(e) => e.key === 'Enter' && submitVerification()}
-                                    />
-                                    <button className="btn btn-primary" onClick={submitVerification}>Check</button>
+                                <h3>{t('verifyPrompt')}</h3>
+                                <div className="formula-verify">
+                                    <div className="formula-row">
+                                        <div className="input-with-label">
+                                            <label>{t('game.longDivision.quotient')}</label>
+                                            <input
+                                                type="number"
+                                                value={verifyQ}
+                                                onChange={(e) => setVerifyQ(e.target.value)}
+                                                placeholder="Q"
+                                            />
+                                        </div>
+                                        <span className="op">×</span>
+                                        <div className="static-val">
+                                            <label>{t('divisor') || 'Divisor'}</label>
+                                            <span>{workingProb.divisor}</span>
+                                        </div>
+                                        <span className="op">+</span>
+                                        <div className="input-with-label">
+                                            <label>{t('game.longDivision.remainder')}</label>
+                                            <input
+                                                type="number"
+                                                value={verifyR}
+                                                onChange={(e) => setVerifyR(e.target.value)}
+                                                placeholder="R"
+                                            />
+                                        </div>
+                                        <span className="op">=</span>
+                                        <div className="static-val">
+                                            <label>{t('dividend') || 'Dividend'}</label>
+                                            <span>{workingProb.dividend}</span>
+                                        </div>
+                                    </div>
                                 </div>
+                                <button className="btn btn-primary verify-btn" onClick={submitVerification}>
+                                    {t('btn.submit') || 'Verify'}
+                                </button>
                             </div>
                         )}
 
@@ -383,6 +437,26 @@ const LongDivisionGame = ({ onBack }) => {
                             </div>
                         )}
                     </div>
+                </div>
+            )}
+
+            {phase === 'fail' && (
+                <div className="fail-overlay" style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    background: 'rgba(0,0,0,0.8)', color: 'white',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 100
+                }}>
+                    <h2>{globalT('gameOver')}</h2>
+                    <p>{t('incorrect')}</p>
+                    {isTestMode ? (
+                        <button className="btn-retry" style={{ fontSize: '1.5rem', padding: '1rem 2rem', marginTop: '20px' }} onClick={() => onTestComplete(false)}>
+                            {globalT('btn.continue')} ➔
+                        </button>
+                    ) : (
+                        <button className="btn-retry" style={{ fontSize: '1.5rem', padding: '1rem 2rem', marginTop: '20px' }} onClick={() => window.location.reload()}>
+                            {globalT('retry')} ↺
+                        </button>
+                    )}
                 </div>
             )}
         </div>

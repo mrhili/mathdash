@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const PlaceValueGame = ({ onBack }) => {
+const PlaceValueGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('place-value');
     const { language, t: globalT } = useLanguage();
 
@@ -15,6 +15,8 @@ const PlaceValueGame = ({ onBack }) => {
         const localKey = key.replace('game.placeValue.', '').replace('game.powerRebuilder.', ''); // Handle legacy keys
         return dict[localKey] || globalT(key);
     };
+
+    const currentLevel = isTestMode ? testLevel : progress.level;
 
     const [targetNumber, setTargetNumber] = useState(null);
     const [digits, setDigits] = useState([]);
@@ -30,36 +32,29 @@ const PlaceValueGame = ({ onBack }) => {
 
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         let num;
-        const level = progress.level;
+        const level = currentLevel;
 
         // 50-Level Progression
+        // ... (reuse existing logic or refactor out if complex. For now keeping inline as it wasn't too long)
         if (level <= 5) {
-            // Levels 1-5: Single Digits (0-9)
             num = randomInt(0, 9);
         } else if (level <= 10) {
-            // Levels 6-10: Two Digits (10-99)
             num = randomInt(10, 99);
         } else if (level <= 15) {
-            // Levels 11-15: Simple Decimals (0.1 - 0.9)
             num = randomFloat(0.1, 0.9, 1);
         } else if (level <= 20) {
-            // Levels 16-20: Mixed (1.1 - 9.9)
             num = randomFloat(1.1, 9.9, 1);
         } else if (level <= 30) {
-            // Levels 21-30: Hundreds (100-999)
             num = randomInt(100, 999);
         } else if (level <= 40) {
-            // Levels 31-40: Hundredths (0.01 - 9.99)
             num = randomFloat(0.01, 9.99, 2);
         } else if (level <= 45) {
-            // Levels 41-45: Thousandths (0.001 - 0.999)
             num = randomFloat(0.001, 0.999, 3);
         } else {
-            // Levels 46-50: Chaos (Big & Small)
             if (Math.random() > 0.5) {
                 num = randomFloat(100.01, 999.99, 2);
             } else {
@@ -79,10 +74,8 @@ const PlaceValueGame = ({ onBack }) => {
 
             let power;
             if (pointIndex === -1) {
-                // Integer
                 power = str.length - 1 - i;
             } else {
-                // Decimal
                 if (i < pointIndex) {
                     power = pointIndex - 1 - i;
                 } else {
@@ -93,7 +86,7 @@ const PlaceValueGame = ({ onBack }) => {
             newDigits.push({
                 val: str[i],
                 power: power,
-                originalIndex: i // To handle duplicate digits correctly if needed, though index in array is enough
+                originalIndex: i
             });
         }
 
@@ -125,8 +118,13 @@ const PlaceValueGame = ({ onBack }) => {
                 setFeedback('correct');
                 setGameState('won');
                 setTimeout(() => {
-                    if (progress.level < 50) {
-                        completeLevel(progress.level + 1, 10);
+                    if (isTestMode && onTestComplete) {
+                        onTestComplete(true);
+                        return;
+                    }
+
+                    if (currentLevel < 50) {
+                        completeLevel(currentLevel + 1, 10);
                     } else {
                         winGame(10);
                     }
@@ -135,21 +133,26 @@ const PlaceValueGame = ({ onBack }) => {
         } else {
             // Incorrect
             setFeedback('incorrect');
-            setTimeout(() => setFeedback(null), 1000);
+            setTimeout(() => {
+                setFeedback(null);
+                // Similar to other games, if strict test mode, fail on first wrong guess or let them retry?
+                // Place value involves multiple clicks, maybe allow retries but track mistakes?
+                // For simplicity now, let them retry in component but if we wanted strict:
+                // if (isTestMode) onTestComplete(false);
+            }, 1000);
         }
     };
 
-    // Generate power options based on current number range
+    // ... (rest of methods: getPowerOptions, renderFormula)
     const getPowerOptions = () => {
         const powers = digits.map(d => d.power);
         const minP = Math.min(...powers);
         const maxP = Math.max(...powers);
-        // Add some distractors
         const options = new Set();
         for (let p = minP - 1; p <= maxP + 1; p++) {
             options.add(p);
         }
-        return Array.from(options).sort((a, b) => b - a); // Descending order
+        return Array.from(options).sort((a, b) => b - a);
     };
 
     const renderFormula = () => {
@@ -173,8 +176,8 @@ const PlaceValueGame = ({ onBack }) => {
             <div className="game-header">
                 <button onClick={onBack} className="btn-icon">←</button>
                 <div className="hud">
-                    <span>{t('level')}: {progress.level}</span>
-                    <span>{t('score')}: {progress.score}</span>
+                    <span>{t('level')}: {currentLevel}</span>
+                    <span>{t('score')}: {isTestMode ? 'TEST' : progress.score}</span>
                 </div>
             </div>
 
@@ -184,9 +187,6 @@ const PlaceValueGame = ({ onBack }) => {
                 <div className="number-display">
                     {targetNumber && targetNumber.toString().split('').map((char, i) => {
                         if (char === '.') return <span key={i} className="decimal-point">.</span>;
-
-                        // Map string index to digits array index
-                        // We need to account for the decimal point shift
                         let digitIndex = i;
                         if (targetNumber.toString().includes('.') && i > targetNumber.toString().indexOf('.')) {
                             digitIndex = i - 1;
@@ -225,7 +225,7 @@ const PlaceValueGame = ({ onBack }) => {
                     <div className="result-card success">
                         <h2>{t('won')}</h2>
                         <p>{t('finalScore')}: {progress.score}</p>
-                        <button className="btn btn-primary" onClick={() => { completeLevel(1, 0); setGameState('playing'); }}>{t('btn.play')}</button>
+                        {!isTestMode && <button className="btn btn-primary" onClick={() => { completeLevel(1, 0); setGameState('playing'); }}>{t('btn.play')}</button>}
                     </div>
                 )}
             </div>

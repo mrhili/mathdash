@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const StackAlignGame = ({ onBack }) => {
+const StackAlignGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('stack-align');
     const { language, t: globalT } = useLanguage();
 
@@ -16,6 +16,8 @@ const StackAlignGame = ({ onBack }) => {
         return dict[localKey] || globalT(key);
     };
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     const [topNumber, setTopNumber] = useState('');
     const [bottomNumber, setBottomNumber] = useState('');
     const [offset, setOffset] = useState(0); // Horizontal shift of bottom number
@@ -23,7 +25,7 @@ const StackAlignGame = ({ onBack }) => {
 
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const generateNumber = (lvl) => {
         // Generate numbers with varying decimal places based on level
@@ -39,8 +41,8 @@ const StackAlignGame = ({ onBack }) => {
     };
 
     const startLevel = () => {
-        const top = generateNumber(progress.level);
-        const bottom = generateNumber(progress.level);
+        const top = generateNumber(currentLevel);
+        const bottom = generateNumber(currentLevel);
         setTopNumber(top);
         setBottomNumber(bottom);
 
@@ -64,37 +66,30 @@ const StackAlignGame = ({ onBack }) => {
     const checkAlignment = () => {
         if (gameState !== 'playing') return;
 
-        // Calculate alignment
-        // We align based on the decimal point index.
-        // Let's say we render them in a virtual grid.
-        // Top decimal index: T_dec
-        // Bottom decimal index: B_dec
-        // Bottom is shifted by 'offset'.
-        // Correct alignment means: T_dec == B_dec + offset
-
         const topDec = getDecimalIndex(topNumber);
         const bottomDec = getDecimalIndex(bottomNumber);
 
-        // The visual offset logic:
-        // If offset is 0, the first chars are aligned? No, that's left alignment.
-        // Let's define offset 0 as "Left aligned".
-        // So if offset is 0, index 0 of Top is above index 0 of Bottom.
-        // We want index topDec of Top to be above index bottomDec of Bottom.
-        // So we need: topDec == bottomDec + offset
-        // Wait, if I shift bottom to the RIGHT (positive offset), index 0 of bottom moves to index 'offset' of grid.
-        // So index 'bottomDec' of bottom moves to grid index 'bottomDec + offset'.
-        // Top is fixed at grid index 0. So Top's decimal is at grid index 'topDec'.
-        // So we want: topDec == bottomDec + offset.
-
         if (topDec === bottomDec + offset) {
-            if (progress.level === 10) {
+            if (isTestMode && onTestComplete) {
+                setGameState('won'); // Visual feedback
+                setTimeout(() => onTestComplete(true), 1000);
+                return;
+            }
+
+            if (currentLevel === 10) {
                 setGameState('won');
-                winGame(20); // 10 levels + 10 bonus
+                winGame(20);
             } else {
-                completeLevel(progress.level + 1, progress.level);
+                completeLevel(currentLevel + 1, currentLevel);
+                // Note: useGameState might handle level persistence. 
+                // In normal play, completeLevel updates state and might trigger re-render -> effect -> startLevel
+                // But simplified here is fine.
             }
         } else {
             setGameState('lost');
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1500);
+            }
         }
     };
 

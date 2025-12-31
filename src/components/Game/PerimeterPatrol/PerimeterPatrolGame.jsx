@@ -6,7 +6,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const PerimeterPatrolGame = ({ onBack }) => {
+const PerimeterPatrolGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('perimeter-patrol');
     const { language, t: globalT } = useLanguage();
 
@@ -23,16 +23,18 @@ const PerimeterPatrolGame = ({ onBack }) => {
     const [gameState, setGameState] = useState('playing'); // playing, won, lost
     const [showAnimation, setShowAnimation] = useState(false);
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         // Generate shape based on level
         // Level 1-2: Simple Rectangles
         // Level 3-5: L-Shapes (Composite)
 
-        const isComplex = progress.level > 2;
+        const isComplex = currentLevel > 2;
 
         let config;
         if (!isComplex) {
@@ -90,15 +92,24 @@ const PerimeterPatrolGame = ({ onBack }) => {
         if (val === levelConfig.perimeter) {
             setShowAnimation(true);
             setTimeout(() => {
-                if (progress.level === 5) {
+                if (isTestMode && onTestComplete) {
+                    setGameState('won');
+                    setTimeout(() => onTestComplete(true), 1000);
+                    return;
+                }
+
+                if (currentLevel === 5) {
                     setGameState('won');
                     winGame(20);
                 } else {
-                    completeLevel(progress.level + 1, progress.score + 10);
+                    completeLevel(currentLevel + 1, progress.score + 10);
                 }
             }, 2000); // Wait for animation
         } else {
             setGameState('lost');
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1000);
+            }
         }
     };
 

@@ -6,7 +6,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const VolumeQuestGame = ({ onBack }) => {
+const VolumeQuestGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('volume-quest');
     const { language, t: globalT } = useLanguage();
 
@@ -28,9 +28,11 @@ const VolumeQuestGame = ({ onBack }) => {
     // Animation state
     const [extrusionProgress, setExtrusionProgress] = useState(0); // 0 to 1
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         // Determine shape type based on level
@@ -41,13 +43,13 @@ const VolumeQuestGame = ({ onBack }) => {
         // Level 5: Trapezoidal Prism
 
         let type = 'square';
-        if (progress.level === 2) type = 'rectangle';
-        if (progress.level === 3) type = 'triangle';
-        if (progress.level === 4) type = 'parallelogram';
-        if (progress.level === 5) type = 'trapezoid';
+        if (currentLevel === 2) type = 'rectangle';
+        if (currentLevel === 3) type = 'triangle';
+        if (currentLevel === 4) type = 'parallelogram';
+        if (currentLevel === 5) type = 'trapezoid';
 
         // Mix for > 5
-        if (progress.level > 5) {
+        if (currentLevel > 5) {
             const rand = Math.random();
             if (rand < 0.2) type = 'square';
             else if (rand < 0.4) type = 'rectangle';
@@ -109,19 +111,31 @@ const VolumeQuestGame = ({ onBack }) => {
                 setTimeout(() => setPhase('volume'), 1500); // Wait for animation
             } else {
                 setGameState('lost');
+                if (isTestMode && onTestComplete) {
+                    setTimeout(() => onTestComplete(false), 1000);
+                }
             }
         } else if (phase === 'volume') {
             let correctVolume = areaValue * dimensions.depth;
 
             if (val === correctVolume) {
-                if (progress.level === 5) {
+                if (isTestMode && onTestComplete) {
+                    setGameState('won');
+                    setTimeout(() => onTestComplete(true), 1000);
+                    return;
+                }
+
+                if (currentLevel === 5) {
                     setGameState('won');
                     winGame(15); // 5 levels + 10 bonus
                 } else {
-                    completeLevel(progress.level + 1, progress.score + 2); // 2 points per level
+                    completeLevel(currentLevel + 1, progress.score + 2); // 2 points per level
                 }
             } else {
                 setGameState('lost');
+                if (isTestMode && onTestComplete) {
+                    setTimeout(() => onTestComplete(false), 1000);
+                }
             }
         }
     };

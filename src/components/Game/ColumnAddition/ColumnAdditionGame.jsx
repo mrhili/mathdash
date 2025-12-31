@@ -40,7 +40,7 @@ const Numpad = ({ onInput, onToggleMode, isCarryMode, labelCarryOn, labelCarryOf
     </div>
 );
 
-const ColumnAdditionGame = ({ onBack }) => {
+const ColumnAdditionGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { language, t: globalT } = useLanguage();
 
     const t = (key) => {
@@ -51,7 +51,7 @@ const ColumnAdditionGame = ({ onBack }) => {
     };
 
     const { progress, saveProgress } = useGameState('column-addition');
-    const currentLevel = progress.level || 1;
+    const currentLevel = isTestMode ? testLevel : (progress.level || 1);
 
     // --- State ---
     const [problem, setProblem] = useState(null);
@@ -181,6 +181,12 @@ const ColumnAdditionGame = ({ onBack }) => {
     const handleSuccess = () => {
         if (phase === 'SUCCESS') return;
         setPhase('SUCCESS');
+
+        if (isTestMode && onTestComplete) {
+            setTimeout(() => onTestComplete(true), 1500); // 1.5s delay to see success msg
+            return;
+        }
+
         saveProgress({ level: currentLevel + 1, score: (progress.score || 0) + 100 });
     };
 
@@ -318,7 +324,13 @@ const ColumnAdditionGame = ({ onBack }) => {
                 <div className="fail-overlay">
                     <h2>{t('gameOver')}</h2>
                     <p>{failReason}</p>
-                    <button className="btn-retry" onClick={loadLevel}>{t('retry')} ↺</button>
+                    {isTestMode ? (
+                        <button className="btn-retry" onClick={() => onTestComplete(false)}>
+                            {globalT('btn.continue')} ➔
+                        </button>
+                    ) : (
+                        <button className="btn-retry" onClick={loadLevel}>{t('retry')} ↺</button>
+                    )}
                 </div>
             )}
             {phase === 'SUCCESS' && (

@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const PowerRebuilderGame = ({ onBack }) => {
+const PowerRebuilderGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('power-rebuilder');
     const { language, t: globalT } = useLanguage();
 
@@ -15,6 +15,8 @@ const PowerRebuilderGame = ({ onBack }) => {
         const localKey = key.replace('game.powerRebuilder.', '').replace('game.power10.', ''); // Handle legacy keys
         return dict[localKey] || globalT(key);
     };
+
+    const currentLevel = isTestMode ? testLevel : progress.level;
 
     const [question, setQuestion] = useState([]); // Array of terms { coeff, power }
     const [targetNumber, setTargetNumber] = useState(0);
@@ -28,28 +30,23 @@ const PowerRebuilderGame = ({ onBack }) => {
 
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         let num;
-        const level = progress.level;
+        const level = currentLevel;
 
         // 50-Level Progression
+        // ... (reuse logic)
         if (level <= 10) {
-            // 2-digit integers (e.g., 51)
             num = randomInt(10, 99);
         } else if (level <= 20) {
-            // 3-digit integers (e.g., 105, 230)
             num = randomInt(100, 999);
         } else if (level <= 30) {
-            // Simple decimals (e.g., 5.1)
-            // Generate integer then divide by 10
             num = randomInt(10, 99) / 10;
         } else if (level <= 40) {
-            // Mixed (e.g., 12.5)
             num = randomInt(100, 999) / 10;
         } else {
-            // Complex (e.g., 0.125, 10.05)
             const type = randomInt(0, 1);
             if (type === 0) num = randomInt(100, 999) / 100;
             else num = randomInt(1000, 9999) / 100;
@@ -119,14 +116,19 @@ const PowerRebuilderGame = ({ onBack }) => {
 
             setFeedback({
                 type: 'success',
-                msg: t('game.power10.correct'), // Fallback to global if needed, but we should add 'correct' to local
+                msg: t('game.power10.correct'),
                 explanation
             });
             setGameState('won');
 
             setTimeout(() => {
-                if (progress.level < 50) {
-                    completeLevel(progress.level + 1, 10);
+                if (isTestMode && onTestComplete) {
+                    onTestComplete(true);
+                    return;
+                }
+
+                if (currentLevel < 50) {
+                    completeLevel(currentLevel + 1, 10);
                 } else {
                     winGame(10);
                 }
@@ -134,8 +136,15 @@ const PowerRebuilderGame = ({ onBack }) => {
         } else {
             // Incorrect
             setFeedback({ type: 'error', msg: t('notQuite') });
-            setTimeout(() => setFeedback(null), 1500);
-            setInput('');
+            setTimeout(() => {
+                setFeedback(null);
+                if (isTestMode && onTestComplete) {
+                    // Strict fail for test mode for now
+                    onTestComplete(false);
+                    return;
+                }
+            }, 1500);
+            if (!isTestMode) setInput('');
         }
     };
 

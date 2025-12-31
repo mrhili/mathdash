@@ -5,7 +5,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const PowerOfTenGame = ({ onBack }) => {
+const PowerOfTenGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('power-of-10');
     const { language, t: globalT } = useLanguage();
 
@@ -19,12 +19,15 @@ const PowerOfTenGame = ({ onBack }) => {
     const [userAnswer, setUserAnswer] = useState('');
     const [feedback, setFeedback] = useState(null); // 'correct', 'incorrect', null
 
+    // Use testLevel if in test mode, otherwise progress.level
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
         startNewRound();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startNewRound = () => {
-        const newQuestion = generateQuestion(progress.level);
+        const newQuestion = generateQuestion(currentLevel);
         setQuestion(newQuestion);
         setUserAnswer('');
         setFeedback(null);
@@ -52,16 +55,27 @@ const PowerOfTenGame = ({ onBack }) => {
             setFeedback('correct');
             // setScore(prev => prev + 10); // Handled by hook
             setTimeout(() => {
-                if (progress.level < 50) {
-                    completeLevel(progress.level + 1, 10);
+                if (isTestMode && onTestComplete) {
+                    onTestComplete(true);
+                    return;
+                }
+
+                if (currentLevel < 50) {
+                    completeLevel(currentLevel + 1, 10);
                 } else {
                     winGame(10);
                 }
             }, 1000);
         } else {
             setFeedback('incorrect');
-            // setScore(prev => Math.max(0, prev - 4)); // Penalty logic removed for simplicity or add saveProgress
             setTimeout(() => {
+                if (isTestMode && onTestComplete) {
+                    // In strict test mode, maybe fail immediately? Or give feedback?
+                    // Original flow for other games was fail immediately or retry.
+                    // For consistency, let's mark as incorrect.
+                    onTestComplete(false);
+                    return;
+                }
                 setFeedback(null);
                 setUserAnswer('');
             }, 1000);
@@ -75,8 +89,8 @@ const PowerOfTenGame = ({ onBack }) => {
             <div className="game-header">
                 <button onClick={onBack} className="btn-icon">←</button>
                 <div className="hud">
-                    <span className="hud-item">{t('level')}: {progress.level}</span>
-                    <span className="hud-item">{t('score')}: {progress.score}</span>
+                    <span className="hud-item">{t('level')}: {currentLevel}</span>
+                    <span className="hud-item">{t('score')}: {isTestMode ? 'TEST' : progress.score}</span>
                 </div>
             </div>
 

@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const UnitMasterGame = ({ onBack }) => {
+const UnitMasterGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('unit-master');
     const { language, t: globalT } = useLanguage();
 
@@ -16,13 +16,15 @@ const UnitMasterGame = ({ onBack }) => {
         return dict[localKey] || globalT(key);
     };
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     const [currentNumberStr, setCurrentNumberStr] = useState('');
     const [correctIndex, setCorrectIndex] = useState(-1);
     const [gameState, setGameState] = useState('playing'); // playing, won, lost
 
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const generateNumberForLevel = (lvl) => {
         let num;
@@ -50,7 +52,7 @@ const UnitMasterGame = ({ onBack }) => {
     };
 
     const startLevel = () => {
-        const numStr = generateNumberForLevel(progress.level);
+        const numStr = generateNumberForLevel(currentLevel);
         setCurrentNumberStr(numStr);
 
         // Find correct index (Ones place)
@@ -74,14 +76,23 @@ const UnitMasterGame = ({ onBack }) => {
         if (char === '.') return;
 
         if (index === correctIndex) {
-            if (progress.level === 20) {
+            if (isTestMode && onTestComplete) {
                 setGameState('won');
-                winGame(30); // 20 levels + 10 bonus
+                setTimeout(() => onTestComplete(true), 1000);
+                return;
+            }
+
+            if (currentLevel === 20) {
+                setGameState('won');
+                winGame(30);
             } else {
-                completeLevel(progress.level + 1, progress.level);
+                completeLevel(currentLevel + 1, currentLevel);
             }
         } else {
             setGameState('lost');
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1500);
+            }
         }
     };
 

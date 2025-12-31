@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const PercentPotionGame = ({ onBack }) => {
+const PercentPotionGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('percent-potion');
     const { language, t: globalT } = useLanguage();
 
@@ -23,11 +23,15 @@ const PercentPotionGame = ({ onBack }) => {
     const [gameState, setGameState] = useState('intro'); // intro, playing, won, lost
     const [introStep, setIntroStep] = useState(0);
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
-        if (gameState === 'playing') {
+        if (isTestMode) {
+            startLevel();
+        } else if (gameState === 'playing') {
             startLevel();
         }
-    }, [progress.level, gameState]);
+    }, [currentLevel, gameState, isTestMode]);
 
     const startLevel = () => {
         // Generate Problem
@@ -36,8 +40,13 @@ const PercentPotionGame = ({ onBack }) => {
         // 2. Find Percent: % = (Part * 100) / Whole
         // 3. Find Whole: Whole = (Part * 100) / %
 
-        const type = progress.level <= 5 ? 'find-part' :
-            progress.level <= 10 ? 'find-percent' : 'find-whole';
+        const type = currentLevel <= 5 ? 'find-part' :
+            currentLevel <= 10 ? 'find-percent' : 'find-whole';
+
+        // Skip intro in test mode
+        if (isTestMode && gameState === 'intro') {
+            setGameState('playing');
+        }
 
         let whole, percent, part;
 
@@ -57,16 +66,6 @@ const PercentPotionGame = ({ onBack }) => {
             whole = (part * 100) / percent;
         }
 
-        // Grid Layout:
-        // [ Part ] [ % ]
-        // [ Whole] [ 100 ]
-        // But we need to map them to TL, TR, BL, BR
-        // Let's stick to standard Proportion Table:
-        // Part / Whole = % / 100
-        // Col 1: Values, Col 2: Percents
-        // TL: Part, TR: %
-        // BL: Whole, BR: 100
-
         const cells = [
             { id: 'tl', val: part, label: t('part'), isTarget: type === 'find-part' },
             { id: 'tr', val: percent, label: t('percent'), isTarget: type === 'find-percent' },
@@ -80,7 +79,8 @@ const PercentPotionGame = ({ onBack }) => {
         setProduct(null);
         setLoner(null);
         setUserAnswer('');
-        setGameState('playing');
+        if (isTestMode) setGameState('playing');
+        else if (gameState !== 'intro') setGameState('playing');
     };
 
     const handleCellClick = (cell) => {
@@ -95,11 +95,6 @@ const PercentPotionGame = ({ onBack }) => {
 
             const targetCell = levelData.cells.find(c => c.isTarget);
             const targetId = targetCell.id;
-
-            // If target is TL, pair is TR-BL
-            // If target is BR, pair is TR-BL (but BR is 100, never target usually?)
-            // If target is TR, pair is TL-BR
-            // If target is BL, pair is TL-BR
 
             let validPairIds = [];
             if (targetId === 'tl' || targetId === 'br') validPairIds = ['tr', 'bl'];
@@ -132,6 +127,11 @@ const PercentPotionGame = ({ onBack }) => {
         const correct = levelData.cells.find(c => c.isTarget).val;
 
         if (Math.abs(val - correct) < 0.1) {
+            if (isTestMode && onTestComplete) {
+                onTestComplete(true);
+                return;
+            }
+
             if (progress.level === 15) {
                 setGameState('won');
                 winGame(30);
@@ -140,6 +140,9 @@ const PercentPotionGame = ({ onBack }) => {
             }
         } else {
             setGameState('lost');
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1500);
+            }
         }
     };
 

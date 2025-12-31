@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const PiSplashGame = ({ onBack }) => {
+const PiSplashGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('pi-splash');
     const { language, t: globalT } = useLanguage();
 
@@ -26,11 +26,16 @@ const PiSplashGame = ({ onBack }) => {
     const [waterHeight, setWaterHeight] = useState(0); // 0 to 100%
     const [activeBucket, setActiveBucket] = useState(null); // 0, 1, 2, 3
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
-        if (phase === 'playing') {
+        if (isTestMode) {
+            startLevel();
+            setPhase('playing');
+        } else if (phase === 'playing') {
             startLevel();
         }
-    }, [phase, progress.level]);
+    }, [phase, currentLevel, isTestMode]);
 
     const runIntroAnimation = async () => {
         // Reset
@@ -101,14 +106,23 @@ const PiSplashGame = ({ onBack }) => {
         const userVal = parseFloat(userAnswer);
 
         if (Math.abs(userVal - correctVolume) < 0.01) {
-            if (progress.level === 5) {
+            if (isTestMode && onTestComplete) {
+                setGameState('won');
+                setTimeout(() => onTestComplete(true), 1000);
+                return;
+            }
+
+            if (currentLevel === 5) {
                 setGameState('won');
                 winGame(15); // 5 levels + 10 bonus
             } else {
-                completeLevel(progress.level + 1, progress.level);
+                completeLevel(currentLevel + 1, progress.level);
             }
         } else {
             setGameState('lost');
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1000);
+            }
         }
     };
 

@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const AngleMasterGame = ({ onBack }) => {
+const AngleMasterGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('angle-master');
     const { language, t: globalT } = useLanguage();
 
@@ -27,14 +27,16 @@ const AngleMasterGame = ({ onBack }) => {
     const [isDragging, setIsDragging] = useState(false);
     const dragStart = useRef({ x: 0, y: 0 });
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         // Level 1-2: Horizontal base (0 rotation)
         // Level 3-5: Random base rotation
-        const isRotated = progress.level > 2;
+        const isRotated = currentLevel > 2;
 
         const angle = Math.floor(Math.random() * 160) + 10; // 10 to 170 degrees
         const base = isRotated ? Math.floor(Math.random() * 360) : 0;
@@ -97,7 +99,13 @@ const AngleMasterGame = ({ onBack }) => {
     const handleSubmit = () => {
         const val = parseInt(userAnswer);
         if (Math.abs(val - targetAngle) <= 2) { // 2 degree tolerance
-            if (progress.level === 5) {
+            if (isTestMode && onTestComplete) {
+                setGameState('won');
+                setTimeout(() => onTestComplete(true), 1000);
+                return;
+            }
+
+            if (currentLevel === 5) {
                 setGameState('won');
                 winGame(20);
             } else {
@@ -108,6 +116,9 @@ const AngleMasterGame = ({ onBack }) => {
             }
         } else {
             setGameState('lost');
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1000);
+            }
         }
     };
 

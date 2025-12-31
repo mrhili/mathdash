@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const ProportionGame = ({ onBack }) => {
+const ProportionGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('proportion-game');
     const { language, t: globalT } = useLanguage();
 
@@ -34,14 +34,16 @@ const ProportionGame = ({ onBack }) => {
     // Logic
     const [relation, setRelation] = useState({ op: '*', val: 100 });
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         // 1. Decide Strategy
         const strategies = ['horizontal', 'vertical', 'cross'];
-        let strat = strategies[Math.floor(Math.random() * (progress.level > 10 ? 3 : 2))];
+        let strat = strategies[Math.floor(Math.random() * (currentLevel > 10 ? 3 : 2))];
 
         // 2. Decide Direction
         let dir = Math.random() > 0.5 ? 'forward' : 'reverse';
@@ -106,7 +108,7 @@ const ProportionGame = ({ onBack }) => {
 
         setTableData({ a, b, c, d });
         setTargetCell(target);
-
+        // Reset Inputs
         setPhase(strat === 'cross' ? 'solve-target' : 'identify-relation');
         setSelectedOperator(null);
         setFactorInput('');
@@ -119,6 +121,9 @@ const ProportionGame = ({ onBack }) => {
             setPhase('solve-target');
         } else {
             alert(t('lookClosely'));
+            if (isTestMode && onTestComplete) {
+                onTestComplete(false);
+            }
         }
     };
 
@@ -127,13 +132,21 @@ const ProportionGame = ({ onBack }) => {
         const correct = tableData[targetCell];
 
         if (Math.abs(val - correct) < 0.01) {
-            if (progress.level === 50) {
+            if (isTestMode && onTestComplete) {
+                onTestComplete(true);
+                return;
+            }
+
+            if (currentLevel === 50) {
                 winGame(50);
             } else {
-                completeLevel(progress.level + 1, progress.score + 10);
+                completeLevel(currentLevel + 1, progress.score + 10);
             }
         } else {
             alert(t('notQuite'));
+            if (isTestMode && onTestComplete) {
+                onTestComplete(false);
+            }
         }
     };
 

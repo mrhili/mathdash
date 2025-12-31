@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const SimplifyExpressGame = ({ onBack }) => {
+const SimplifyExpressGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('simplify-express');
     const { language, t: globalT } = useLanguage();
 
@@ -24,6 +24,8 @@ const SimplifyExpressGame = ({ onBack }) => {
     const [feedback, setFeedback] = useState(null); // { type, msg, scoreBonus }
     const [gameState, setGameState] = useState('playing');
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     // Helper: Random Int [min, max]
     const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
     // Helper: GCD
@@ -31,11 +33,11 @@ const SimplifyExpressGame = ({ onBack }) => {
 
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         let n, d;
-        const level = progress.level;
+        const level = currentLevel;
 
         // 50-Level Progression (Harder numbers)
         if (level <= 10) {
@@ -119,7 +121,12 @@ const SimplifyExpressGame = ({ onBack }) => {
         } else {
             // Invalid
             setFeedback({ type: 'error', msg: t('oops') });
-            setTimeout(() => setFeedback(null), 1500);
+            setTimeout(() => {
+                setFeedback(null);
+                if (isTestMode && onTestComplete) {
+                    onTestComplete(false);
+                }
+            }, 1500);
             setInput('');
         }
     };
@@ -146,6 +153,11 @@ const SimplifyExpressGame = ({ onBack }) => {
         setGameState('won');
 
         setTimeout(() => {
+            if (isTestMode && onTestComplete) {
+                onTestComplete(true);
+                return;
+            }
+
             if (progress.level < 50) {
                 completeLevel(progress.level + 1, bonus);
             } else {

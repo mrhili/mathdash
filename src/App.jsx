@@ -9,6 +9,7 @@ import DataRights from './components/Info/DataRights';
 import ConsentBanner from './components/Info/ConsentBanner';
 import MathConcept from './components/MathConcept/MathConcept';
 import { getGameById } from './config/GameConfig';
+import TestRunner from './components/TestRunner/TestRunner';
 
 function App() {
   const [activeGame, setActiveGame] = useState(null);
@@ -73,7 +74,9 @@ function App() {
       {/* Main Game Layout */}
       {!isLegalPage && !isLearnMode && (
         <Layout onNavigate={handleSelectGame} activeGame={activeGame}>
-          {activeGameObj ? (
+          {activeGame === 'test-runner' ? (
+            <TestRunner onBack={handleBackToDashboard} />
+          ) : activeGameObj ? (
             <activeGameObj.component onBack={handleBackToDashboard} />
           ) : (
             <Dashboard onSelectGame={handleSelectGame} />

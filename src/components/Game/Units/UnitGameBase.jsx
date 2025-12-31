@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const UnitGameBase = ({ config, onBack }) => {
+const UnitGameBase = ({ config, onBack, isTestMode, testLevel, onTestComplete }) => {
     const { id, title, units, intro, color, steps } = config;
     const { progress, completeLevel, winGame } = useGameState(id);
     const { language, t: globalT } = useLanguage();
@@ -21,11 +21,16 @@ const UnitGameBase = ({ config, onBack }) => {
     const [userAnswer, setUserAnswer] = useState('');
     const [feedback, setFeedback] = useState(null);
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
-        if (gameState === 'playing') {
+        if (isTestMode) {
+            setGameState('playing');
+            generateLevel();
+        } else if (gameState === 'playing') {
             generateLevel();
         }
-    }, [progress.level, gameState]);
+    }, [currentLevel, gameState, isTestMode]);
 
     const generateLevel = () => {
         // Difficulty Scaling
@@ -35,7 +40,7 @@ const UnitGameBase = ({ config, onBack }) => {
         // 31-40: Reverse (m -> km)
         // 41-50: Complex
 
-        const level = progress.level;
+        const level = currentLevel;
         let fromUnit, toUnit, value;
 
         // Helper to get random unit index
@@ -102,17 +107,26 @@ const UnitGameBase = ({ config, onBack }) => {
         const epsilon = 0.000001;
         if (Math.abs(userVal - correct) < epsilon) {
             setFeedback('correct');
+            if (isTestMode && onTestComplete) {
+                setGameState('won');
+                setTimeout(() => onTestComplete(true), 1000);
+                return;
+            }
+
             setTimeout(() => {
-                if (progress.level === 50) {
+                if (currentLevel === 50) {
                     setGameState('won');
                     winGame(50);
                 } else {
-                    completeLevel(progress.level + 1, progress.score + 10);
+                    completeLevel(currentLevel + 1, progress.score + 10);
                 }
             }, 1000);
         } else {
             setFeedback('incorrect');
             setGameState('lost');
+            if (isTestMode && onTestComplete) {
+                setTimeout(() => onTestComplete(false), 1000);
+            }
         }
     };
 

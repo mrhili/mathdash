@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const PyramidPowerGame = ({ onBack }) => {
+const PyramidPowerGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('pyramid-power');
     const { language, t: globalT } = useLanguage();
 
@@ -23,11 +23,16 @@ const PyramidPowerGame = ({ onBack }) => {
     const [feedback, setFeedback] = useState(null);
     const [playPhase, setPlayPhase] = useState('prism'); // 'prism', 'transition', 'pyramid'
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
-        if (gameState === 'playing') {
+        if (isTestMode) {
+            startLevel();
+            setGameState('playing');
+        } else if (gameState === 'playing') {
             startLevel();
         }
-    }, [progress.level, gameState]);
+    }, [currentLevel, gameState, isTestMode]);
 
     const nextIntroStep = () => {
         if (introStep < 3) {
@@ -50,6 +55,11 @@ const PyramidPowerGame = ({ onBack }) => {
         setUserAnswer('');
         setFeedback(null);
         setPlayPhase('prism');
+
+        // Skip intro in test mode
+        if (isTestMode && gameState === 'intro') {
+            setGameState('playing');
+        }
     };
 
     const handleSubmit = () => {
@@ -67,19 +77,31 @@ const PyramidPowerGame = ({ onBack }) => {
                 }, 1500);
             } else {
                 setFeedback('incorrect');
+                if (isTestMode && onTestComplete) {
+                    setTimeout(() => onTestComplete(false), 1000);
+                }
             }
         } else if (playPhase === 'pyramid') {
             if (val === pyramidVol) {
                 setFeedback('correct');
-                if (progress.level === 5) {
+                if (isTestMode && onTestComplete) {
+                    setGameState('won');
+                    setTimeout(() => onTestComplete(true), 1000);
+                    return;
+                }
+
+                if (currentLevel === 5) {
                     setGameState('won');
                     winGame(20); // 5 levels + 10 bonus
                 } else {
-                    completeLevel(progress.level + 1, progress.score + 10);
+                    completeLevel(currentLevel + 1, progress.score + 10);
                 }
             } else {
                 setFeedback('incorrect');
                 setGameState('lost');
+                if (isTestMode && onTestComplete) {
+                    setTimeout(() => onTestComplete(false), 1000);
+                }
             }
         }
     };

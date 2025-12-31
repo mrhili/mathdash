@@ -4,7 +4,7 @@ import { useGameState } from '../../../hooks/useGameState';
 import { useLanguage } from '../../../context/LanguageContext';
 import { en, fr } from './translations';
 
-const ScaleExplorerGame = ({ onBack }) => {
+const ScaleExplorerGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const { progress, completeLevel, winGame } = useGameState('scale-explorer');
     const { language, t: globalT } = useLanguage();
 
@@ -19,9 +19,11 @@ const ScaleExplorerGame = ({ onBack }) => {
     const [zoomLevel, setZoomLevel] = useState(0); // 0: Tens, 1: Ones, 2: Tenths, 3: Hundredths
     const [gameState, setGameState] = useState('playing');
 
+    const currentLevel = isTestMode ? testLevel : progress.level;
+
     useEffect(() => {
         startLevel();
-    }, [progress.level]);
+    }, [currentLevel]);
 
     const startLevel = () => {
         // Level 1: Integer (e.g., 42) -> Zoom 0 to 1
@@ -31,13 +33,13 @@ const ScaleExplorerGame = ({ onBack }) => {
         // Level 5: Chaos (Random large number + decimals)
 
         let decimals = 0;
-        if (progress.level === 2) decimals = 1;
-        if (progress.level === 3) decimals = 2;
-        if (progress.level >= 4) decimals = 3;
+        if (currentLevel === 2) decimals = 1;
+        if (currentLevel === 3) decimals = 2;
+        if (currentLevel >= 4) decimals = 3;
 
         // Generate target
         let num = Math.random() * 100;
-        if (progress.level === 1) num = Math.floor(num);
+        if (currentLevel === 1) num = Math.floor(num);
         else num = parseFloat(num.toFixed(decimals));
 
         setTargetNumber(num);
@@ -78,6 +80,9 @@ const ScaleExplorerGame = ({ onBack }) => {
             // Shake effect or feedback?
             // For now, just simple feedback
             alert(t('lookCloser'));
+            if (isTestMode && onTestComplete) {
+                onTestComplete(false);
+            }
         }
     };
 
@@ -86,13 +91,19 @@ const ScaleExplorerGame = ({ onBack }) => {
 
         // Floating point comparison tolerance
         if (Math.abs(val - targetNumber) < 0.0001) {
-            if (progress.level === 5) {
+            if (isTestMode && onTestComplete) {
+                setGameState('won');
+                setTimeout(() => onTestComplete(true), 1000);
+                return;
+            }
+
+            if (currentLevel === 5) {
                 setGameState('won');
                 winGame(25);
             } else {
                 setGameState('won'); // Temporary state
                 setTimeout(() => {
-                    completeLevel(progress.level + 1, progress.score + 10);
+                    completeLevel(currentLevel + 1, progress.score + 10);
                 }, 1500);
             }
         }
