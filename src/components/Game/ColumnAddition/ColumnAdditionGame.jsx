@@ -102,7 +102,7 @@ const ColumnAdditionGame = ({ onBack }) => {
                 col: i, // Logic column (0 is rightmost)
                 row: 5, // Visual row
                 highlight: { col: i },
-                hint: `${d1} + ${d2} ${carry ? `+ ${carry}` : ''} = ${sum}`,
+                hint: `${d1} + ${d2} ${carry ? `+ ${carry}` : ''} = ?`,
                 phase: 'ADD'
             });
 
@@ -116,7 +116,7 @@ const ColumnAdditionGame = ({ onBack }) => {
                         col: i + 1,
                         row: 1, // Visual row
                         highlight: { col: i }, // Still highlight current col processing
-                        hint: `Sum is ${sum}. Toggle Carry Mode!`,
+                        hint: `Sum is ${sum}`,
                         phase: 'ADD'
                     });
                 } else {
@@ -127,7 +127,7 @@ const ColumnAdditionGame = ({ onBack }) => {
                         col: i + 1,
                         row: 5,
                         highlight: { col: i },
-                        hint: `Sum is ${sum}. Write the final digit.`,
+                        hint: `Write the final digit.`,
                         phase: 'ADD'
                     });
                 }
@@ -195,6 +195,16 @@ const ColumnAdditionGame = ({ onBack }) => {
         const step = steps[currentStepIndex];
         if (!step) return null;
 
+        // "Stay in place" Logic:
+        // If it's a CARRY step, but user is NOT in carry mode, 
+        // keep the cursor on the Result row of the PREVIOUS column (where they just typed).
+        if (step.type === 'carry' && !carryMode) {
+            // step.col is calculation column index (0..N).
+            // Logic index: step.col - 1 is the previous column.
+            const gridCol = getGridCol(step.col - 1);
+            return { gridRow: 5, gridColumn: gridCol };
+        }
+
         const gridCol = getGridCol(step.col);
         // Visual Row logic:
         // Carry steps are row 1. Result steps are row 5.
@@ -226,6 +236,7 @@ const ColumnAdditionGame = ({ onBack }) => {
                 <button className="btn-back" onClick={onBack}>← {globalT('btn.back')}</button>
                 <div className="header-center">
                     <div className="level-badge">{globalT('level')} {currentLevel}</div>
+                    <div className="score-badge">{globalT('score')} {progress.score}</div>
                     <div className="phase-badge">{t('phaseAdd')}</div>
                 </div>
             </div>

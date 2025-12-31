@@ -273,15 +273,22 @@ const ColumnMultiplicationGame = ({ onBack }) => {
         if (!step || !step.highlight) return null;
         const { top, bot } = step.highlight;
 
-        const x1 = ((8 - top) * 100 / 8) - (100 / 16);
-        const y1 = 20;
+        // Grid: 40px cells + 2px gap.
+        // Col indices are 1-based from right (8 is rightmost visual?? No, getGridCol(i) = 8-i)
+        // i=0 -> col=8. i=7 -> col=1.
 
-        const x2 = ((8 - bot) * 100 / 8) - (100 / 16);
-        const y2 = 40;
+        const getX = (digitIndex) => {
+            const gridCol = 8 - digitIndex;
+            // (col-1)*(40+2) + 20
+            return (gridCol - 1) * 42 + 20;
+        };
 
-        return { x1, y1, x2, y2 };
+        const x1 = getX(top);
+        // Row 2 is 50px-100px. Center ~ 75px.
+        // Row 3 is 100px-150px. Center ~ 125px.
+
+        return { x1, y1: 75, x2: getX(bot), y2: 125 };
     };
-
 
     if (!problem) return <div>{globalT('common.loading')}</div>;
 
@@ -301,6 +308,7 @@ const ColumnMultiplicationGame = ({ onBack }) => {
                 <button className="btn-back" onClick={onBack}>← {globalT('btn.back')}</button>
                 <div className="header-center">
                     <div className="level-badge">{globalT('level')} {currentLevel}</div>
+                    <div className="score-badge">{globalT('score')} {progress.score}</div>
                     <div className="phase-badge">{currentPhaseText}</div>
                 </div>
             </div>
@@ -312,8 +320,8 @@ const ColumnMultiplicationGame = ({ onBack }) => {
                     <svg className="guide-arrows">
                         {arrow && (
                             <line
-                                x1={`${arrow.x1}%`} y1={`${arrow.y1}%`}
-                                x2={`${arrow.x2}%`} y2={`${arrow.y2}%`}
+                                x1={arrow.x1} y1={arrow.y1}
+                                x2={arrow.x2} y2={arrow.y2}
                                 stroke="#FF9800" strokeWidth="2" strokeDasharray="4"
                                 markerEnd="url(#arrowhead)"
                             />

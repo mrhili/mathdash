@@ -317,6 +317,17 @@
     text-transform: uppercase;
 }
 
+.score-badge {
+    background: #23008a;
+    color: #73fff8;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin-top: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 .toggle-icon {
     font-size: 1.2rem;
 }

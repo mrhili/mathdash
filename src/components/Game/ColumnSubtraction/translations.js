@@ -5,11 +5,19 @@ export const translations = {
         "subPrompt": "{a} - {b} = ?",
         "subPromptBig": "{a} (now {a10}) - {b} = ?",
         "correct": "Good!",
-        "wrong": "Try again.",
         "done": "Done!",
         "next": "Next Level",
-        "gameOver": "Game Over",
-        "retry": "Retry"
+        "retry": "Retry",
+        "done": "Great job! Problem solved!",
+        "equalAddTen": "In the {col} column: {a} is less than {b}. Click on {a} to add 10 (it becomes {newVal})",
+        "equalAddOne": "Now add 1 to the bottom number in the {col} column. Click on {a} (it becomes {newVal})",
+        "subResult": "Perfect! Now subtract {a} - {b} = ? Enter the result in the {col} column",
+        "doStepFirst": "First complete the equal addition step!",
+        "clickCorrectDigit": "Click on the highlighted digit to add 10",
+        "clickCorrectColumn": "Click on the highlighted bottom digit to add 1",
+        "wrong": "Try again! Check your calculation",
+        "gameOver": "Let's try again!",
+
     },
     fr: {
         "start": "Commencer",
@@ -17,10 +25,31 @@ export const translations = {
         "subPrompt": "{a} - {b} = ?",
         "subPromptBig": "{a} (maintenant {a10}) - {b} = ?",
         "correct": "Bien !",
-        "wrong": "Essaie encore.",
-        "done": "Fini !",
         "next": "Niveau Suivant",
-        "gameOver": "Perdu",
-        "retry": "Réessayer"
+        "retry": "Réessayer",
+        "equalAddTen": "Dans la colonne des {col} : {a} est inférieur à {b}. Cliquez sur {a} pour ajouter 10 (ça devient {newVal})",
+        "equalAddOne": "Maintenant ajoutez 1 au chiffre du bas dans la colonne des {col}. Cliquez sur {a} (ça devient {newVal})",
+        "subResult": "Parfait! Maintenant soustrayez {a} - {b} = ? Entrez le résultat dans la colonne des {col}",
+        "doStepFirst": "D'abord complétez l'étape d'ajout égal!",
+        "clickCorrectDigit": "Cliquez sur le chiffre en surbrillance pour ajouter 10",
+        "clickCorrectColumn": "Cliquez sur le chiffre du bas en surbrillance pour ajouter 1",
+        "wrong": "Essaie encore! Vérifie ton calcul",
+        "gameOver": "Essayons encore!",
+        "done": "Excellent travail! Problème résolu!",
+    },
+    ar: {
+        // ... existing Arabic translations
+        equalAddTen: "في خانة {col}: {a} أصغر من {b}. انقر على {a} لإضافة 10 (يصبح {newVal})",
+        equalAddOne: "الآن أضف 1 إلى الرقم السفلي في خانة {col}. انقر على {a} (يصبح {newVal})",
+        subResult: "ممتاز! الآن اطرح {a} - {b} = ? أدخل النتيجة في خانة {col}",
+        doStepFirst: "أولاً أكمل خطوة الإضافة المتساوية!",
+        clickCorrectDigit: "انقر على الرقم المضاء لإضافة 10",
+        clickCorrectColumn: "انقر على الرقم السفلي المضاء لإضافة 1",
+        wrong: "حاول مرة أخرى! تحقق من حسابك",
+        gameOver: "لنجرب مرة أخرى!",
+        retry: "إعادة المحاولة",
+        done: "عمل رائع! تم حل المشكلة!",
+        // ... other translations
     }
+
 };
