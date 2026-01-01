@@ -14,16 +14,15 @@ export const TEST_CONFIG = {
         { id: 'column-subtraction', enabled: true, levelRange: { min: 10, max: 50 }, weight: 1 },
         { id: 'column-multiplication', enabled: true, levelRange: { min: 10, max: 25 }, weight: 1 },
         { id: 'long-division', enabled: true, levelRange: { min: 5, max: 35 }, weight: 1.5 },
-        { id: 'power-of-10', enabled: true, levelRange: { min: 1, max: 20 }, weight: 1 },
-        { id: 'place-value', enabled: true, levelRange: { min: 1, max: 20 }, weight: 1 },
-        { id: 'power-rebuilder', enabled: true, levelRange: { min: 1, max: 20 }, weight: 1 },
-        { id: 'stack-align', enabled: true, levelRange: { min: 1, max: 20 }, weight: 1 },
-        { id: 'unit-master', enabled: true, levelRange: { min: 1, max: 20 }, weight: 1 },
+
+
+
+
 
         { id: 'fraction-match', enabled: true, levelRange: { min: 1, max: 50 }, weight: 1 }, // Levels go high here
-        { id: 'simplify-smash', enabled: true, levelRange: { min: 1, max: 50 }, weight: 1 },
-        { id: 'simplify-express', enabled: true, levelRange: { min: 1, max: 50 }, weight: 1 },
-        { id: 'fraction-scale', enabled: true, levelRange: { min: 1, max: 50 }, weight: 1 },
+
+
+
         { id: 'proportion-game', enabled: true, levelRange: { min: 1, max: 30 }, weight: 1 },
         { id: 'rule-of-three', enabled: true, levelRange: { min: 1, max: 30 }, weight: 1 },
         { id: 'percent-potion', enabled: true, levelRange: { min: 1, max: 30 }, weight: 1 },
@@ -37,8 +36,7 @@ export const TEST_CONFIG = {
         { id: 'cone-zone', enabled: true, levelRange: { min: 1, max: 5 }, weight: 1 },
         { id: 'sphere-force', enabled: true, levelRange: { min: 1, max: 5 }, weight: 1 },
         { id: 'symmetry-shock', enabled: true, levelRange: { min: 1, max: 50 }, weight: 1 },
-        { id: 'scale-explorer', enabled: true, levelRange: { min: 1, max: 5 }, weight: 1 },
-        { id: 'scientific-scale', enabled: true, levelRange: { min: 1, max: 5 }, weight: 1 },
+
         { id: 'rolling-pi', enabled: true, levelRange: { min: 1, max: 5 }, weight: 1 },
 
         { id: 'unit-length', enabled: true, levelRange: { min: 1, max: 20 }, weight: 1 },
@@ -49,8 +47,20 @@ export const TEST_CONFIG = {
         { id: 'unit-time', enabled: true, levelRange: { min: 1, max: 20 }, weight: 1 },
 
 
+        { id: 'simplify-express', enabled: false, levelRange: { min: 1, max: 50 }, weight: 1 },
+        { id: 'place-value', enabled: false, levelRange: { min: 1, max: 20 }, weight: 1 },
+        { id: 'power-rebuilder', enabled: false, levelRange: { min: 1, max: 20 }, weight: 1 },
+        { id: 'power-of-10', enabled: false, levelRange: { min: 1, max: 20 }, weight: 1 },
+        { id: 'stack-align', enabled: false, levelRange: { min: 1, max: 20 }, weight: 1 },
 
         { id: 'fraction-slicer', enabled: false, levelRange: { min: 1, max: 20 }, weight: 1 },
+        { id: 'simplify-smash', enabled: false, levelRange: { min: 1, max: 50 }, weight: 1 },
+        { id: 'unit-master', enabled: false, levelRange: { min: 1, max: 20 }, weight: 1 },
+
+        { id: 'scale-explorer', enabled: false, levelRange: { min: 1, max: 5 }, weight: 1 },
+        { id: 'scientific-scale', enabled: false, levelRange: { min: 1, max: 5 }, weight: 1 },
+        { id: 'fraction-scale', enabled: false, levelRange: { min: 1, max: 50 }, weight: 1 },
+
     ]
 };
 

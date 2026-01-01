@@ -66,6 +66,16 @@ const PercentPotionGame = ({ onBack, isTestMode, testLevel, onTestComplete }) =>
             whole = (part * 100) / percent;
         }
 
+        // Grid Layout:
+        // [ Part ] [ % ]
+        // [ Whole] [ 100 ]
+        // But we need to map them to TL, TR, BL, BR
+        // Let's stick to standard Proportion Table:
+        // Part / Whole = % / 100
+        // Col 1: Values, Col 2: Percents
+        // TL: Part, TR: %
+        // BL: Whole, BR: 100
+
         const cells = [
             { id: 'tl', val: part, label: t('part'), isTarget: type === 'find-part' },
             { id: 'tr', val: percent, label: t('percent'), isTarget: type === 'find-percent' },
@@ -95,6 +105,11 @@ const PercentPotionGame = ({ onBack, isTestMode, testLevel, onTestComplete }) =>
 
             const targetCell = levelData.cells.find(c => c.isTarget);
             const targetId = targetCell.id;
+
+            // If target is TL, pair is TR-BL
+            // If target is BR, pair is TR-BL (but BR is 100, never target usually?)
+            // If target is TR, pair is TL-BR
+            // If target is BL, pair is TL-BR
 
             let validPairIds = [];
             if (targetId === 'tl' || targetId === 'br') validPairIds = ['tr', 'bl'];

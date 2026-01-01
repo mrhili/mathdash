@@ -41,20 +41,28 @@ const PlaceValueGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
         // 50-Level Progression
         // ... (reuse existing logic or refactor out if complex. For now keeping inline as it wasn't too long)
         if (level <= 5) {
+            // Levels 1-5: Single Digits (0-9)
             num = randomInt(0, 9);
         } else if (level <= 10) {
+            // Levels 6-10: Two Digits (10-99)
             num = randomInt(10, 99);
         } else if (level <= 15) {
+            // Levels 11-15: Simple Decimals (0.1 - 0.9)
             num = randomFloat(0.1, 0.9, 1);
         } else if (level <= 20) {
+            // Levels 16-20: Mixed (1.1 - 9.9)
             num = randomFloat(1.1, 9.9, 1);
         } else if (level <= 30) {
+            // Levels 21-30: Hundreds (100-999)
             num = randomInt(100, 999);
         } else if (level <= 40) {
+            // Levels 31-40: Hundredths (0.01 - 9.99)
             num = randomFloat(0.01, 9.99, 2);
         } else if (level <= 45) {
+            // Levels 41-45: Thousandths (0.001 - 0.999)
             num = randomFloat(0.001, 0.999, 3);
         } else {
+            // Levels 46-50: Chaos (Big & Small)
             if (Math.random() > 0.5) {
                 num = randomFloat(100.01, 999.99, 2);
             } else {
@@ -74,8 +82,10 @@ const PlaceValueGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
 
             let power;
             if (pointIndex === -1) {
+                // Integer
                 power = str.length - 1 - i;
             } else {
+                // Decimal
                 if (i < pointIndex) {
                     power = pointIndex - 1 - i;
                 } else {
@@ -86,7 +96,7 @@ const PlaceValueGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
             newDigits.push({
                 val: str[i],
                 power: power,
-                originalIndex: i
+                originalIndex: i // To handle duplicate digits correctly if needed, though index in array is enough
             });
         }
 
@@ -148,11 +158,12 @@ const PlaceValueGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
         const powers = digits.map(d => d.power);
         const minP = Math.min(...powers);
         const maxP = Math.max(...powers);
+        // Add some distractors
         const options = new Set();
         for (let p = minP - 1; p <= maxP + 1; p++) {
             options.add(p);
         }
-        return Array.from(options).sort((a, b) => b - a);
+        return Array.from(options).sort((a, b) => b - a); // Descending order
     };
 
     const renderFormula = () => {
@@ -187,6 +198,9 @@ const PlaceValueGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
                 <div className="number-display">
                     {targetNumber && targetNumber.toString().split('').map((char, i) => {
                         if (char === '.') return <span key={i} className="decimal-point">.</span>;
+
+                        // Map string index to digits array index
+                        // We need to account for the decimal point shift
                         let digitIndex = i;
                         if (targetNumber.toString().includes('.') && i > targetNumber.toString().indexOf('.')) {
                             digitIndex = i - 1;

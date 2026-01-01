@@ -66,8 +66,27 @@ const StackAlignGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
     const checkAlignment = () => {
         if (gameState !== 'playing') return;
 
+        // Calculate alignment
+        // We align based on the decimal point index.
+        // Let's say we render them in a virtual grid.
+        // Top decimal index: T_dec
+        // Bottom decimal index: B_dec
+        // Bottom is shifted by 'offset'.
+        // Correct alignment means: T_dec == B_dec + offset
+
         const topDec = getDecimalIndex(topNumber);
         const bottomDec = getDecimalIndex(bottomNumber);
+
+        // The visual offset logic:
+        // If offset is 0, the first chars are aligned? No, that's left alignment.
+        // Let's define offset 0 as "Left aligned".
+        // So if offset is 0, index 0 of Top is above index 0 of Bottom.
+        // We want index topDec of Top to be above index bottomDec of Bottom.
+        // So we need: topDec == bottomDec + offset
+        // Wait, if I shift bottom to the RIGHT (positive offset), index 0 of bottom moves to index 'offset' of grid.
+        // So index 'bottomDec' of bottom moves to grid index 'bottomDec + offset'.
+        // Top is fixed at grid index 0. So Top's decimal is at grid index 'topDec'.
+        // So we want: topDec == bottomDec + offset.
 
         if (topDec === bottomDec + offset) {
             if (isTestMode && onTestComplete) {

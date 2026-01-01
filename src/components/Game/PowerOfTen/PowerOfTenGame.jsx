@@ -68,6 +68,7 @@ const PowerOfTenGame = ({ onBack, isTestMode, testLevel, onTestComplete }) => {
             }, 1000);
         } else {
             setFeedback('incorrect');
+            // setScore(prev => Math.max(0, prev - 4)); // Penalty logic removed for simplicity or add saveProgress
             setTimeout(() => {
                 if (isTestMode && onTestComplete) {
                     // In strict test mode, maybe fail immediately? Or give feedback?

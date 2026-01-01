@@ -43,18 +43,22 @@ const FractionSlicerGame = ({ onBack, isTestMode, testLevel, onTestComplete }) =
         // 50-Level Progression
         // ... (reuse logic)
         if (level <= 5) {
+            // Halves, Quarters (2, 4)
             const dens = [2, 4];
             den = dens[randomInt(0, 1)];
             num = randomInt(1, den - 1);
         } else if (level <= 15) {
+            // Thirds, Sixths, Eighths (3, 6, 8)
             const dens = [3, 6, 8];
             den = dens[randomInt(0, 2)];
             num = randomInt(1, den - 1);
         } else if (level <= 30) {
+            // Fifths, Tenths, Twelfths (5, 10, 12)
             const dens = [5, 10, 12];
             den = dens[randomInt(0, 2)];
             num = randomInt(1, den - 1);
         } else {
+            // Primes/Odd (7, 9, 11, 13)
             const dens = [7, 9, 11, 13];
             den = dens[randomInt(0, 3)];
             num = randomInt(1, den - 1);

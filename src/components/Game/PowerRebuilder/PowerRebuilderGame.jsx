@@ -39,14 +39,20 @@ const PowerRebuilderGame = ({ onBack, isTestMode, testLevel, onTestComplete }) =
         // 50-Level Progression
         // ... (reuse logic)
         if (level <= 10) {
+            // 2-digit integers (e.g., 51)
             num = randomInt(10, 99);
         } else if (level <= 20) {
+            // 3-digit integers (e.g., 105, 230)
             num = randomInt(100, 999);
         } else if (level <= 30) {
+            // Simple decimals (e.g., 5.1)
+            // Generate integer then divide by 10
             num = randomInt(10, 99) / 10;
         } else if (level <= 40) {
+            // Mixed (e.g., 12.5)
             num = randomInt(100, 999) / 10;
         } else {
+            // Complex (e.g., 0.125, 10.05)
             const type = randomInt(0, 1);
             if (type === 0) num = randomInt(100, 999) / 100;
             else num = randomInt(1000, 9999) / 100;
